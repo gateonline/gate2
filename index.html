@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>GATE Mock Test</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="introScreen" class="intro-screen">
+
+    <div class="intro-box">
+
+        <h1>GATE Mock Test</h1>
+
+        <h2>Section 1: Chemistry of High Polymers</h2>
+
+        <div class="exam-info">
+
+            <p><strong>Total Questions:</strong> 25</p>
+
+            <p><strong>Total Marks:</strong> 35</p>
+
+            <p><strong>Duration:</strong> 1 Hour</p>
+
+        </div>
+
+        <h3>Marking Scheme</h3>
+
+        <ul>
+            <li>Q1–Q10: 1 mark each</li>
+            <li>Q11: 2 marks</li>
+            <li>Q12–Q16: 1 mark each</li>
+            <li>Q17–Q25: 2 marks each</li>
+            <li>MCQ: −1 mark for an incorrect answer</li>
+            <li>MSQ: No negative marking</li>
+            <li>NAT: No negative marking</li>
+            <li>NAT answers should be entered up to 2 decimal places</li>
+        </ul>
+
+        <h3>Instructions</h3>
+
+        <ul>
+            <li>Click <strong>Start Exam</strong> to begin.</li>
+            <li>The timer starts only after clicking Start Exam.</li>
+            <li>Questions will not be visible before the exam starts.</li>
+            <li>Use Previous and Save & Next to navigate.</li>
+            <li>Use Mark for Review when you want to revisit a question.</li>
+            <li>The question palette shows the status of each question.</li>
+            <li>The exam will be submitted automatically when the timer reaches zero.</li>
+            <li>Once submitted, the exam cannot be restarted.</li>
+        </ul>
+
+        <div class="color-guide">
+
+            <h3>Question Palette</h3>
+
+            <div>
+                <span class="legend grey"></span>
+                Not Answered
+            </div>
+
+            <div>
+                <span class="legend green"></span>
+                Answered
+            </div>
+
+            <div>
+                <span class="legend purple"></span>
+                Marked for Review
+            </div>
+
+        </div>
+
+        <button id="startExamBtn" onclick="startExam()">
+            Start Exam
+        </button>
+
+    </div>
+
+</div>
+
+
+<div id="examScreen" style="display:none;">
+
+    <div class="header">
+
+        <h2>GATE Mock Test</h2>
+
+        <div class="timer-container">
+            Time Left:
+            <span id="timer">60:00</span>
+        </div>
+
+    </div>
+
+
+    <div class="container">
+
+        <div class="question-area">
+
+            <h3 id="question"></h3>
+
+            <div id="options"></div>
+
+            <div id="natInput"></div>
+
+            <div class="buttons">
+
+                <button onclick="prevQuestion()">Previous</button>
+
+                <button onclick="clearResponse()">Clear</button>
+
+                <button onclick="markReview()">Mark for Review</button>
+
+                <button onclick="saveNext()">Save & Next</button>
+
+                <button onclick="submitExam()">Submit</button>
+
+            </div>
+
+        </div>
+
+
+        <div class="palette-section">
+
+            <div class="palette-title">
+                Question Palette
+            </div>
+
+            <div class="palette" id="palette"></div>
+
+            <div class="calculator-container">
+
+                <button onclick="openCalculator()">
+                    GATE Calculator
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div id="calculator" class="calculator">
+
+    <div class="calculator-header">
+        GATE Calculator
+        <button onclick="closeCalculator()">X</button>
+    </div>
+
+    <input type="text" id="calcDisplay" readonly>
+
+    <div class="calc-buttons">
+
+        <button onclick="calcInput('7')">7</button>
+        <button onclick="calcInput('8')">8</button>
+        <button onclick="calcInput('9')">9</button>
+        <button onclick="calcInput('/')">÷</button>
+
+        <button onclick="calcInput('4')">4</button>
+        <button onclick="calcInput('5')">5</button>
+        <button onclick="calcInput('6')">6</button>
+        <button onclick="calcInput('*')">×</button>
+
+        <button onclick="calcInput('1')">1</button>
+        <button onclick="calcInput('2')">2</button>
+        <button onclick="calcInput('3')">3</button>
+        <button onclick="calcInput('-')">−</button>
+
+        <button onclick="calcInput('0')">0</button>
+        <button onclick="calcInput('.')">.</button>
+        <button onclick="calculate()">=</button>
+        <button onclick="calcInput('+')">+</button>
+
+        <button onclick="clearCalculator()" class="clear-calc">
+            C
+        </button>
+
+    </div>
+
+</div>
+
+
+<script src="questions.js"></script>
+<script src="script.js"></script>
+
+</body>
+
+</html>
