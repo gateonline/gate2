@@ -1,11 +1,8 @@
 const questions = [
 
-    // =========================================================
-    // Q1 - 1 MARK - MCQ
-    // =========================================================
-
     {
-        question: "Glyptal, an alkyd resin, is synthesized by reacting phthalic anhydride with glycerol. What are the respective functionalities of phthalic anhydride and glycerol?",
+        question:
+            "Glyptal, an alkyd resin, is synthesized by reacting phthalic anhydride with glycerol. What are the respective functionalities of phthalic anhydride and glycerol?",
 
         options: [
             "1, 3",
@@ -20,12 +17,9 @@ const questions = [
     },
 
 
-    // =========================================================
-    // Q2 - 1 MARK - MCQ
-    // =========================================================
-
     {
-        question: "What is the functionality of 1,4-divinylbenzene when it undergoes addition reactions across its carbon-carbon double bonds?",
+        question:
+            "What is the functionality of 1,4-divinylbenzene when it undergoes addition reactions across its carbon-carbon double bonds?",
 
         options: [
             "1",
@@ -40,12 +34,9 @@ const questions = [
     },
 
 
-    // =========================================================
-    // Q3 - 1 MARK - MCQ
-    // =========================================================
-
     {
-        question: "During the step-growth polymerization of phenol with formaldehyde, what is the functionality of phenol?",
+        question:
+            "During the step-growth polymerization of phenol with formaldehyde, what is the functionality of phenol?",
 
         options: [
             "2",
@@ -60,12 +51,9 @@ const questions = [
     },
 
 
-    // =========================================================
-    // Q4 - 1 MARK - MCQ
-    // =========================================================
-
     {
-        question: "Which one of the monomers given is used in the synthesis of cellulose? (G-23)",
+        question:
+            "Which one of the following monomers is used in the synthesis of cellulose?",
 
         options: [
             "Fructose",
@@ -80,12 +68,9 @@ const questions = [
     },
 
 
-    // =========================================================
-    // Q5 - 1 MARK - MCQ
-    // =========================================================
-
     {
-        question: "A polymer scientist isolates a polymer from a plant source. Hydrolysis of the polymer yields only glucose molecules. The polymer is most likely:",
+        question:
+            "A polymer scientist isolates a polymer from a plant source. Hydrolysis of the polymer yields only glucose molecules. The polymer is most likely:",
 
         options: [
             "Polycarbonate",
@@ -100,12 +85,9 @@ const questions = [
     },
 
 
-    // =========================================================
-    // Q6 - 1 MARK - MCQ
-    // =========================================================
-
     {
-        question: "A researcher wants to prepare a polymer that can be enzymatically degraded in the human body. Which monomer would be the most suitable starting material?",
+        question:
+            "A researcher wants to prepare a polymer that can be enzymatically degraded in the human body. Which monomer would be the most suitable starting material?",
 
         options: [
             "Vinyl chloride",
@@ -120,12 +102,18 @@ const questions = [
     },
 
 
-    // =========================================================
-    // Q7 - 1 MARK - MCQ
-    // =========================================================
-
     {
-        question: "Among the options given, identify the correct match between the polymers and their glass transition temperatures (Tg). (G-23)\n\nP. High density polyethylene\nQ. Poly(vinyl carbazole)\nR. Polymethyl methacrylate\nS. Polycarbonate\n\n1. >200 °C\n2. 145 to 155 °C\n3. -100 to -80 °C\n4. 90 to 100 °C",
+        question:
+            "Match the following polymers with their approximate glass transition temperatures (Tg).\n\n" +
+            "P. High density polyethylene\n" +
+            "Q. Poly(vinyl carbazole)\n" +
+            "R. Polymethyl methacrylate\n" +
+            "S. Polycarbonate\n\n" +
+            "1. >200 °C\n" +
+            "2. 145–155 °C\n" +
+            "3. −100 to −80 °C\n" +
+            "4. 90–100 °C\n\n" +
+            "Choose the correct match.",
 
         options: [
             "P-2; Q-4; R-3; S-1",
@@ -140,30 +128,25 @@ const questions = [
     },
 
 
-    // =========================================================
-    // Q8 - 1 MARK - NAT
-    // =========================================================
-
     {
-        question: "In a stoichiometric polycondensation of a diol and a diacid, the number-average degree of polymerization required is X̄n = 50. The percent conversion (p) of functional groups needed, in %, is ________. Round to one decimal place.",
+        question:
+            "In a stoichiometric polycondensation of a diol and a diacid, the number-average degree of polymerization required is X̄n = 50. The percent conversion of functional groups required, in %, is ________.\n\n" +
+            "Enter the answer correct to TWO decimal places.",
 
-        answer: 98.0,
+        answer: 98.00,
         type: "NAT",
         marks: 1
     },
 
 
-    // =========================================================
-    // Q9 - 1 MARK - MCQ
-    // =========================================================
-
     {
-        question: "Glycerol reacted with a large excess of acetic acid (monofunctional) will produce:",
+        question:
+            "Glycerol reacts with a large excess of acetic acid, which is monofunctional. The product is expected to be:",
 
         options: [
             "A crosslinked network polymer, since glycerol is trifunctional",
             "A linear polyester of high molecular weight",
-            "Only low-molecular-weight ester (no polymer), since chain growth is terminated by the monofunctional acid",
+            "Only low-molecular-weight ester, since chain growth is terminated by the monofunctional acid",
             "A hyperbranched polymer"
         ],
 
@@ -173,12 +156,10 @@ const questions = [
     },
 
 
-    // =========================================================
-    // Q10 - 1 MARK - NAT
-    // =========================================================
-
     {
-        question: "In a free-radical polymerization, doubling the initiator concentration (all else constant) changes the polymerization rate Rp by a factor of ________. Round to two decimal places, given Rp ∝ [M][I]^½.",
+        question:
+            "In a free-radical polymerization, doubling the initiator concentration, with all other variables constant, changes the polymerization rate Rp by a factor of ________, given Rp ∝ [M][I]¹ᐟ².\n\n" +
+            "Enter the answer correct to TWO decimal places.",
 
         answer: 1.41,
         type: "NAT",
@@ -186,32 +167,20 @@ const questions = [
     },
 
 
-    // =========================================================
-    // Q11 - 2 MARKS - MCQ
-    // =========================================================
-
     {
-        question: "A monomer mixture contains 3 mol of a diol, 2 mol of a diacid, and 1 mol of a triacid. The average functionality (f_avg) of the system, considering all molecules, is:",
+        question:
+            "A monomer mixture contains 3 mol of a diol, 2 mol of a diacid, and 1 mol of a triacid. Determine the average functionality (f_avg) of the system, considering all molecules.\n\n" +
+            "Enter the answer correct to TWO decimal places.",
 
-        options: [
-            "2.00",
-            "2.17",
-            "2.50",
-            "3.00"
-        ],
-
-        answer: 1,
-        type: "MCQ",
+        answer: 2.17,
+        type: "NAT",
         marks: 2
     },
 
 
-    // =========================================================
-    // Q12 - 1 MARK - MCQ
-    // =========================================================
-
     {
-        question: "α-Methylstyrene has a low ceiling temperature (~61 °C). Attempting free-radical polymerization of pure α-methylstyrene at 80 °C will result in:",
+        question:
+            "α-Methylstyrene has a low ceiling temperature (~61 °C). Attempting free-radical polymerization of pure α-methylstyrene at 80 °C will result in:",
 
         options: [
             "Very high molecular weight polymer, since rate increases with temperature",
@@ -226,48 +195,29 @@ const questions = [
     },
 
 
-    // =========================================================
-    // Q13 - 1 MARK - NAT
-    // =========================================================
-
     {
-        question: "Monomers A and B are copolymerized with r_A = 4.0 and r_B = 0.25 from an equimolar feed (f_A = f_B = 0.5). Using the Mayo–Lewis equation, the instantaneous mole fraction of A in the copolymer, F_A, is ________. Round to two decimal places.",
-
-        answer: 0.80,
-        type: "NAT",
-        marks: 1
-    },
-
-
-    // =========================================================
-    // Q14 - 1 MARK - MSQ
-    // =========================================================
-
-    {
-        question: "In a free-radical polymerization, a chain transfer agent (e.g., a mercaptan) is added. Which statements are CORRECT?",
+        question:
+            "In a free-radical polymerization, a chain transfer agent such as a mercaptan is added. Which of the following statements are CORRECT?",
 
         options: [
             "The overall rate of polymerization Rp remains essentially unchanged if the new radical reinitiates efficiently",
             "The number-average degree of polymerization decreases",
-            "Chain transfer to polymer leads to branching, as in LDPE",
+            "Chain transfer to polymer can lead to branching, as in LDPE",
             "The Mayo equation relates 1/X̄n to the ratio [S]/[M] with slope equal to the chain transfer constant Cs"
         ],
 
-        answer: [0, 1, 2, 3],
+        correctAnswers: [0, 1, 2, 3],
         type: "MSQ",
         marks: 1
     },
 
 
-    // =========================================================
-    // Q15 - 1 MARK - MCQ
-    // =========================================================
-
     {
-        question: "Poly(ethylene terephthalate) is NOT rubbery at room temperature, while natural rubber is. Which combination of reasons is correct?",
+        question:
+            "Poly(ethylene terephthalate) is NOT rubbery at room temperature, while natural rubber is. Which combination of reasons is correct?",
 
         options: [
-            "PET: Tg above room temperature and crystallizability; NR: Tg far below room temperature, amorphous in unstrained state, crosslinkable",
+            "PET: Tg above room temperature and crystallizability; NR: Tg far below room temperature, amorphous in the unstrained state and crosslinkable",
             "PET: too low molecular weight; NR: too high molecular weight",
             "PET: absence of polar groups; NR: presence of polar groups",
             "PET: flexible backbone; NR: rigid backbone"
@@ -279,45 +229,37 @@ const questions = [
     },
 
 
-    // =========================================================
-    // Q16 - 1 MARK - NAT
-    // =========================================================
-
     {
-        question: "A polypropylene sample has specific volume 1.10 cm³/g. Given specific volumes: amorphous = 1.18 cm³/g and crystalline = 1.06 cm³/g, the mass-fraction crystallinity in %, is ________. Round to the nearest integer.",
+        question:
+            "A polypropylene sample has a specific volume of 1.10 cm³/g. Given specific volumes of the amorphous and crystalline phases as 1.18 cm³/g and 1.06 cm³/g respectively, calculate the mass-fraction crystallinity in %.\n\n" +
+            "Enter the answer correct to TWO decimal places.",
 
-        answer: 67,
+        answer: 66.67,
         type: "NAT",
         marks: 1
     },
 
 
-    // =========================================================
-    // Q17 - 2 MARKS - MCQ
-    // =========================================================
-
     {
-        question: "Which one of the following statements is CORRECT?",
+        question:
+            "Which one of the following statements is CORRECT?",
 
         options: [
             "Atactic polypropylene is a hard, highly crystalline plastic",
             "Isotactic polypropylene crystallizes because its regular stereochemistry allows helical chain packing",
             "Syndiotactic polystyrene cannot crystallize",
-            "Tacticity has no influence on Tm"
+            "Tacticity has no influence on melting temperature"
         ],
 
         answer: 1,
         type: "MCQ",
-        marks: 2
+        marks: 1
     },
 
 
-    // =========================================================
-    // Q18 - 2 MARKS - MSQ
-    // =========================================================
-
     {
-        question: "Nylon 6,6 is made from hexamethylene diamine and adipic acid. For a sample with number-average molecular weight M̄n = 22,600 g/mol (repeat unit mass = 226 g/mol), which statements are CORRECT?",
+        question:
+            "Nylon-6,6 is made from hexamethylene diamine and adipic acid. For a sample with number-average molecular weight M̄n = 22,600 g/mol and repeat unit mass = 226 g/mol, which statements are CORRECT?",
 
         options: [
             "The degree of polymerization based on the repeat unit is 100",
@@ -326,18 +268,15 @@ const questions = [
             "The repeat unit contains one amide linkage"
         ],
 
-        answer: [0, 1, 2],
+        correctAnswers: [0, 1, 2],
         type: "MSQ",
         marks: 2
     },
 
 
-    // =========================================================
-    // Q19 - 2 MARKS - MSQ
-    // =========================================================
-
     {
-        question: "Among the options given, identify the correct pair(s) of catalyst and co-catalyst that form a Ziegler-Natta catalyst. (G-23)",
+        question:
+            "Among the following, identify the correct pair(s) of catalyst and co-catalyst that form a Ziegler-Natta catalyst.",
 
         options: [
             "TiCl3 and Al(CH3CH2)2Cl",
@@ -346,18 +285,15 @@ const questions = [
             "VCl4 and Al(CH3CH2)2Cl"
         ],
 
-        answer: [0, 3],
+        correctAnswers: [0, 3],
         type: "MSQ",
         marks: 2
     },
 
 
-    // =========================================================
-    // Q20 - 2 MARKS - MCQ
-    // =========================================================
-
     {
-        question: "Phenol-formaldehyde resin is prepared by:",
+        question:
+            "Phenol-formaldehyde resin is prepared by:",
 
         options: [
             "Condensation polymerization",
@@ -372,12 +308,9 @@ const questions = [
     },
 
 
-    // =========================================================
-    // Q21 - 2 MARKS - MSQ
-    // =========================================================
-
     {
-        question: "Consider an ideal step-growth polymerization involving multifunctional monomers. Which changes would favor formation of a crosslinked/gelled structure rather than a purely linear polymer?",
+        question:
+            "Consider an ideal step-growth polymerization involving multifunctional monomers. Which changes would favor formation of a crosslinked/gelled structure rather than a purely linear polymer?",
 
         options: [
             "Increasing the fraction of monomers having functionality greater than two",
@@ -386,18 +319,16 @@ const questions = [
             "Increasing the number of possible inter-chain connections"
         ],
 
-        answer: [0, 1, 3],
+        correctAnswers: [0, 1, 3],
         type: "MSQ",
         marks: 2
     },
 
 
-    // =========================================================
-    // Q22 - 2 MARKS - NAT
-    // =========================================================
-
     {
-        question: "A polymerization mixture contains 60 mol% bifunctional molecules and 40 mol% trifunctional molecules. Assuming the percentages are mole fractions of molecules, determine the theoretical gel-point conversion to two decimal places.",
+        question:
+            "A polymerization mixture contains 60 mol% bifunctional molecules and 40 mol% trifunctional molecules. Assuming the percentages are mole fractions of molecules, determine the theoretical gel-point conversion.\n\n" +
+            "Enter the answer correct to TWO decimal places.",
 
         answer: 0.83,
         type: "NAT",
@@ -405,12 +336,10 @@ const questions = [
     },
 
 
-    // =========================================================
-    // Q23 - 2 MARKS - NAT
-    // =========================================================
-
     {
-        question: "A linear step-growth polymerization has a stoichiometric ratio r = 0.90 and reaches an extent of reaction p = 0.98. Determine the number-average degree of polymerization, Xn, to two decimal places.",
+        question:
+            "A linear step-growth polymerization has a stoichiometric ratio r = 0.90 and reaches an extent of reaction p = 0.98. Determine the number-average degree of polymerization, X̄n.\n\n" +
+            "Enter the answer correct to TWO decimal places.",
 
         answer: 13.97,
         type: "NAT",
@@ -418,34 +347,37 @@ const questions = [
     },
 
 
-    // =========================================================
-    // Q24 - 2 MARKS - NAT
-    // =========================================================
-
     {
-        question: "Poly(hexamethylene adipamide) (Nylon-6,6) was synthesized by condensation polymerization of hexamethylenediamine and adipic acid in 1:1 mole ratio. Calculate the acid equivalent of the polymer whose average DP is 520. Enter the answer to two decimal places.",
+        question:
+            "Poly(hexamethylene adipamide) (Nylon-6,6) was synthesized by condensation polymerization of hexamethylenediamine and adipic acid in a 1:1 mole ratio. Calculate the acid equivalent of the polymer whose average DP is 520.\n\n" +
+            "Use a repeat-unit molar mass of 226 g/mol and an end-group correction of 18 g/mol.\n\n" +
+            "Enter the answer correct to TWO decimal places.",
 
-        answer: 117538,
+        answer: 117538.00,
         type: "NAT",
         marks: 2
     },
 
 
-    // =========================================================
-    // Q25 - 2 MARKS - NAT
-    // =========================================================
-
     {
-        question: "A Nylon-6,6 polymer has an acid equivalent of 90418 g/acid equivalent. The molecular mass of the repeating unit is 226 g/mol. Determine the average degree of polymerization. Enter the answer to two decimal places.",
+        question:
+            "A Nylon-6,6 polymer has an acid equivalent of 90418 g/acid equivalent. The molecular mass of the repeating unit is 226 g/mol. Determine the average degree of polymerization.\n\n" +
+            "Enter the answer correct to TWO decimal places.",
 
-        answer: 400,
+        answer: 400.00,
         type: "NAT",
         marks: 2
     },
 
 
-    // =========================================================
-    // Q26 - NOT USED
-    // =========================================================
+    {
+        question:
+            "Nylon-6,6 is prepared by condensation polymerization of equimolar hexamethylenediamine and adipic acid. If the average degree of polymerization is 275, calculate the molecular mass of the polymer, assuming an end-group correction of 18 g/mol.\n\n" +
+            "Enter the answer correct to TWO decimal places.",
+
+        answer: 62168.00,
+        type: "NAT",
+        marks: 2
+    }
 
 ];
