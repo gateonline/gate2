@@ -43,9 +43,17 @@ window.addEventListener(
     "load",
     function () {
 
-        document.getElementById(
-            "totalQuestions"
-        ).innerText = questions.length;
+        const totalQuestions =
+            document.getElementById(
+                "totalQuestions"
+            );
+
+        if (totalQuestions) {
+
+            totalQuestions.innerText =
+                questions.length;
+
+        }
 
         console.log(
             "POLYMER GATE loaded."
@@ -61,7 +69,9 @@ window.addEventListener(
 
 function startExam() {
 
-    clearInterval(timerInterval);
+    clearInterval(
+        timerInterval
+    );
 
     current = 0;
 
@@ -97,7 +107,8 @@ function startExam() {
 
     document.getElementById(
         "startScreen"
-    ).style.display = "none";
+    ).style.display =
+        "none";
 
 
     /*
@@ -106,16 +117,25 @@ function startExam() {
 
     document.getElementById(
         "examArea"
-    ).style.display = "flex";
+    ).style.display =
+        "flex";
 
 
     /*
        Enable calculator
     */
 
-    document.getElementById(
-        "calculatorButton"
-    ).disabled = false;
+    const calculatorButton =
+        document.getElementById(
+            "calculatorButton"
+        );
+
+    if (calculatorButton) {
+
+        calculatorButton.disabled =
+            false;
+
+    }
 
 
     /*
@@ -143,6 +163,7 @@ function startExam() {
             updateTimer,
             1000
         );
+
 }
 
 
@@ -164,6 +185,7 @@ function loadQuestion() {
         );
 
         return;
+
     }
 
 
@@ -171,10 +193,17 @@ function loadQuestion() {
        Question number
     */
 
-    document.getElementById(
-        "currentQuestion"
-    ).innerText =
-        current + 1;
+    const currentQuestion =
+        document.getElementById(
+            "currentQuestion"
+        );
+
+    if (currentQuestion) {
+
+        currentQuestion.innerText =
+            current + 1;
+
+    }
 
 
     /*
@@ -184,6 +213,7 @@ function loadQuestion() {
     document.getElementById(
         "question"
     ).innerText =
+
         "Q" +
         (current + 1) +
         ". " +
@@ -198,10 +228,17 @@ function loadQuestion() {
         getQuestionType(q);
 
 
-    document.getElementById(
-        "questionType"
-    ).innerText =
-        type;
+    const questionType =
+        document.getElementById(
+            "questionType"
+        );
+
+    if (questionType) {
+
+        questionType.innerText =
+            type;
+
+    }
 
 
     /*
@@ -215,11 +252,22 @@ function loadQuestion() {
         );
 
 
-    document.getElementById(
-        "questionMarks"
-    ).innerText =
-        marks +
-        (marks === 1 ? " Mark" : " Marks");
+    const questionMarks =
+        document.getElementById(
+            "questionMarks"
+        );
+
+    if (questionMarks) {
+
+        questionMarks.innerText =
+            marks +
+            (
+                marks === 1
+                    ? " Mark"
+                    : " Marks"
+            );
+
+    }
 
 
     /*
@@ -231,12 +279,12 @@ function loadQuestion() {
             "options"
         );
 
-
-    optionsContainer.innerHTML = "";
+    optionsContainer.innerHTML =
+        "";
 
 
     /*
-       NAT question
+       NAT QUESTION
     */
 
     if (
@@ -248,6 +296,7 @@ function loadQuestion() {
             answers[current] === null
                 ? ""
                 : answers[current];
+
 
         optionsContainer.innerHTML = `
 
@@ -265,6 +314,7 @@ function loadQuestion() {
 
                 <div class="nat-instruction">
                     Enter your numerical answer.
+                    Answer should be correct to TWO decimal places.
                 </div>
 
             </div>
@@ -272,6 +322,7 @@ function loadQuestion() {
         `;
 
         return;
+
     }
 
 
@@ -282,6 +333,22 @@ function loadQuestion() {
     let multiple =
         type === "MSQ" ||
         type === "MULTIPLE SELECT";
+
+
+    /*
+       Make sure options exist
+    */
+
+    if (!Array.isArray(q.options)) {
+
+        console.error(
+            "Options missing for question:",
+            current + 1
+        );
+
+        return;
+
+    }
 
 
     q.options.forEach(
@@ -300,7 +367,9 @@ function loadQuestion() {
                     Array.isArray(
                         answers[current]
                     ) &&
-                    answers[current].includes(i);
+                    answers[current].includes(
+                        i
+                    );
 
             }
 
@@ -357,6 +426,7 @@ function loadQuestion() {
 
         }
     );
+
 }
 
 
@@ -390,6 +460,7 @@ function getQuestionType(q) {
 
 
     return type;
+
 }
 
 
@@ -397,7 +468,10 @@ function getQuestionType(q) {
    QUESTION MARKS
    ===================================================== */
 
-function getQuestionMarks(q, index) {
+function getQuestionMarks(
+    q,
+    index
+) {
 
     /*
        If questions.js explicitly contains marks,
@@ -469,6 +543,7 @@ function getQuestionMarks(q, index) {
 
 
     return 1;
+
 }
 
 
@@ -480,6 +555,7 @@ function saveCurrentAnswer() {
 
     let q =
         questions[current];
+
 
     let type =
         getQuestionType(q);
@@ -525,7 +601,11 @@ function saveCurrentAnswer() {
             Number(value);
 
 
-        if (!Number.isFinite(number)) {
+        if (
+            !Number.isFinite(
+                number
+            )
+        ) {
 
             return false;
 
@@ -535,7 +615,9 @@ function saveCurrentAnswer() {
         answers[current] =
             number;
 
+
         return true;
+
     }
 
 
@@ -559,9 +641,11 @@ function saveCurrentAnswer() {
                 selected
             ).map(
                 function (el) {
+
                     return Number(
                         el.value
                     );
+
                 }
             );
 
@@ -581,12 +665,15 @@ function saveCurrentAnswer() {
         answers[current] =
             values.sort(
                 function (a, b) {
+
                     return a - b;
+
                 }
             );
 
 
         return true;
+
     }
 
 
@@ -608,10 +695,12 @@ function saveCurrentAnswer() {
             );
 
         return true;
+
     }
 
 
     return false;
+
 }
 
 
@@ -652,6 +741,7 @@ function saveNext() {
         loadQuestion();
 
     }
+
 }
 
 
@@ -676,13 +766,16 @@ function prevQuestion() {
     updatePalette();
 
 
-    if (current > 0) {
+    if (
+        current > 0
+    ) {
 
         current--;
 
         loadQuestion();
 
     }
+
 }
 
 
@@ -698,9 +791,11 @@ function clearResponse() {
     review[current] =
         false;
 
+
     loadQuestion();
 
     updatePalette();
+
 }
 
 
@@ -716,6 +811,7 @@ function markReview() {
         true;
 
     updatePalette();
+
 }
 
 
@@ -738,7 +834,8 @@ function updatePalette() {
     }
 
 
-    palette.innerHTML = "";
+    palette.innerHTML =
+        "";
 
 
     for (
@@ -791,6 +888,7 @@ function updatePalette() {
         `;
 
     }
+
 }
 
 
@@ -820,6 +918,7 @@ function jump(i) {
 
 
     loadQuestion();
+
 }
 
 
@@ -906,6 +1005,7 @@ function updateTimer() {
 
 
         return;
+
     }
 
 
@@ -924,7 +1024,10 @@ function updateTimer() {
     ).innerText =
 
         String(minutes)
-            .padStart(2, "0")
+            .padStart(
+                2,
+                "0"
+            )
 
         +
 
@@ -933,7 +1036,10 @@ function updateTimer() {
         +
 
         String(seconds)
-            .padStart(2, "0");
+            .padStart(
+                2,
+                "0"
+            );
 
 
     /*
@@ -947,6 +1053,7 @@ function updateTimer() {
 
 
     if (
+        timerBox &&
         remaining <= 300
     ) {
 
@@ -955,6 +1062,7 @@ function updateTimer() {
         );
 
     }
+
 }
 
 
@@ -973,6 +1081,7 @@ function submitExam() {
         "submitModal"
     ).style.display =
         "flex";
+
 }
 
 
@@ -993,6 +1102,7 @@ function closeSubmitModal() {
         "submitModal"
     ).style.display =
         "none";
+
 }
 
 
@@ -1020,6 +1130,7 @@ function confirmSubmit() {
     openNameModal(
         false
     );
+
 }
 
 
@@ -1027,12 +1138,15 @@ function confirmSubmit() {
    CANDIDATE DETAILS
    ===================================================== */
 
-function openNameModal(autoSubmit) {
+function openNameModal(
+    autoSubmit
+) {
 
     if (autoSubmit) {
 
         examEnded =
             true;
+
 
         clearInterval(
             timerInterval
@@ -1048,12 +1162,21 @@ function openNameModal(autoSubmit) {
 
     document.getElementById(
         "candidateName"
-    ).value = "";
+    ).value =
+        "";
 
 
-    document.getElementById(
-        "candidateMobile"
-    ).value = "";
+    const mobileInput =
+        document.getElementById(
+            "candidateMobile"
+        );
+
+    if (mobileInput) {
+
+        mobileInput.value =
+            "";
+
+    }
 
 
     document.getElementById(
@@ -1072,6 +1195,7 @@ function openNameModal(autoSubmit) {
         },
         100
     );
+
 }
 
 
@@ -1087,10 +1211,16 @@ function finalSubmit() {
         ).value.trim();
 
 
-    let mobile =
+    let mobileElement =
         document.getElementById(
             "candidateMobile"
-        ).value.trim();
+        );
+
+
+    let mobile =
+        mobileElement
+            ? mobileElement.value.trim()
+            : "";
 
 
     /*
@@ -1105,9 +1235,11 @@ function finalSubmit() {
             "Please enter your name."
         );
 
+
         document.getElementById(
             "candidateName"
         ).focus();
+
 
         return;
 
@@ -1128,9 +1260,13 @@ function finalSubmit() {
             "Please enter a valid 10-digit mobile number."
         );
 
-        document.getElementById(
-            "candidateMobile"
-        ).focus();
+
+        if (mobileElement) {
+
+            mobileElement.focus();
+
+        }
+
 
         return;
 
@@ -1156,9 +1292,8 @@ function finalSubmit() {
        Google Apps Script URL
 
        IMPORTANT:
-       Replace this with the NEW
-       deployment URL of the Sheet2
-       Apps Script.
+       Replace this with your deployed
+       Sheet2 Apps Script Web App URL.
     */
 
     const SCRIPT_URL =
@@ -1202,11 +1337,15 @@ function finalSubmit() {
 
 
         if (
-            Array.isArray(answer)
+            Array.isArray(
+                answer
+            )
         ) {
 
             answer =
-                answer.join(",");
+                answer.join(
+                    ","
+                );
 
         }
 
@@ -1216,7 +1355,8 @@ function finalSubmit() {
             answer === undefined
         ) {
 
-            answer = "";
+            answer =
+                "";
 
         }
 
@@ -1298,11 +1438,18 @@ function finalSubmit() {
         name;
 
 
-    document.getElementById(
-        "resultMobile"
-    ).innerText =
-        "Mobile: " +
-        mobile;
+    const resultMobile =
+        document.getElementById(
+            "resultMobile"
+        );
+
+    if (resultMobile) {
+
+        resultMobile.innerText =
+            "Mobile: " +
+            mobile;
+
+    }
 
 
     document.getElementById(
@@ -1329,6 +1476,7 @@ function finalSubmit() {
     sessionStorage.removeItem(
         "gateExamStartTime"
     );
+
 }
 
 
@@ -1338,7 +1486,8 @@ function finalSubmit() {
 
 function calculateScore() {
 
-    let score = 0;
+    let score =
+        0;
 
 
     for (
@@ -1382,6 +1531,8 @@ function calculateScore() {
 
         /*
            NAT
+
+           NAT has NO negative marking.
         */
 
         if (
@@ -1396,16 +1547,21 @@ function calculateScore() {
                 )
             ) {
 
-                score += marks;
+                score +=
+                    marks;
 
             }
 
+
             continue;
+
         }
 
 
         /*
            MSQ
+
+           MSQ has NO negative marking.
         */
 
         if (
@@ -1420,11 +1576,14 @@ function calculateScore() {
                 )
             ) {
 
-                score += marks;
+                score +=
+                    marks;
 
             }
 
+
             continue;
+
         }
 
 
@@ -1439,17 +1598,16 @@ function calculateScore() {
             )
         ) {
 
-            score += marks;
+            score +=
+                marks;
 
         }
 
         else {
 
             /*
-               Negative marking only
-               for MCQ.
+               Negative marking for MCQ.
 
-               Default:
                1-mark MCQ = -1/3
                2-mark MCQ = -2/3
 
@@ -1488,7 +1646,8 @@ function calculateScore() {
         score < 0
     ) {
 
-        score = 0;
+        score =
+            0;
 
     }
 
@@ -1500,6 +1659,7 @@ function calculateScore() {
     return Number(
         score.toFixed(2)
     );
+
 }
 
 
@@ -1509,7 +1669,8 @@ function calculateScore() {
 
 function getTotalMarks() {
 
-    let total = 0;
+    let total =
+        0;
 
 
     for (
@@ -1528,6 +1689,7 @@ function getTotalMarks() {
 
 
     return total;
+
 }
 
 
@@ -1614,6 +1776,7 @@ function checkMCQ(
             correct
         )
     );
+
 }
 
 
@@ -1626,8 +1789,18 @@ function checkMSQ(
     studentAnswer
 ) {
 
+    /*
+       New questions.js uses
+       correctAnswers for MSQ.
+
+       Also support q.answer for
+       compatibility with older files.
+    */
+
     let correct =
-        q.answer;
+        q.correctAnswers !== undefined
+            ? q.correctAnswers
+            : q.answer;
 
 
     /*
@@ -1651,8 +1824,7 @@ function checkMSQ(
                     .map(
                         function (x) {
 
-                            return x
-                                .trim();
+                            return x.trim();
 
                         }
                     );
@@ -1696,7 +1868,10 @@ function checkMSQ(
 
                 }
 
-                return Number(item);
+
+                return Number(
+                    item
+                );
 
             }
         );
@@ -1718,14 +1893,18 @@ function checkMSQ(
 
     correct.sort(
         function (a, b) {
+
             return a - b;
+
         }
     );
 
 
     student.sort(
         function (a, b) {
+
             return a - b;
+
         }
     );
 
@@ -1738,6 +1917,7 @@ function checkMSQ(
             student
         )
     );
+
 }
 
 
@@ -1783,7 +1963,6 @@ function checkNAT(
 
        q.tolerance
        q.tol
-       q.range
     */
 
     if (
@@ -1821,8 +2000,9 @@ function checkNAT(
 
 
     /*
-       If no tolerance is specified,
-       compare to 2 decimal places.
+       No tolerance specified.
+
+       Compare to TWO decimal places.
     */
 
     return (
@@ -1833,6 +2013,7 @@ function checkNAT(
             correct.toFixed(2)
         )
     );
+
 }
 
 
@@ -1871,7 +2052,9 @@ function closeCalculator() {
 }
 
 
-function calcInput(value) {
+function calcInput(
+    value
+) {
 
     let display =
         document.getElementById(
@@ -1889,7 +2072,8 @@ function calcClear() {
 
     document.getElementById(
         "calc-display"
-    ).value = "";
+    ).value =
+        "";
 
 }
 
@@ -1934,10 +2118,19 @@ function toggleAngleMode() {
     }
 
 
-    document.getElementById(
-        "angleModeButton"
-    ).innerText =
-        angleMode;
+    const button =
+        document.getElementById(
+            "angleModeButton"
+        );
+
+
+    if (button) {
+
+        button.innerText =
+            angleMode;
+
+    }
+
 }
 
 
@@ -2158,6 +2351,7 @@ function calcFunction(
             "Error";
 
     }
+
 }
 
 
@@ -2272,6 +2466,7 @@ function calculateResult() {
             "Error";
 
     }
+
 }
 
 
@@ -2285,7 +2480,9 @@ function factorial(
 
     if (
         n < 0 ||
-        !Number.isInteger(n)
+        !Number.isInteger(
+            n
+        )
     ) {
 
         return NaN;
@@ -2302,7 +2499,8 @@ function factorial(
     }
 
 
-    let result = 1;
+    let result =
+        1;
 
 
     for (
@@ -2311,12 +2509,14 @@ function factorial(
         i++
     ) {
 
-        result *= i;
+        result *=
+            i;
 
     }
 
 
     return result;
+
 }
 
 
@@ -2342,6 +2542,7 @@ function toRadians(
         Math.PI /
         180
     );
+
 }
 
 
@@ -2363,6 +2564,7 @@ function fromRadians(
         180 /
         Math.PI
     );
+
 }
 
 
@@ -2378,14 +2580,18 @@ function formatCalculatorResult(
         Math.abs(value) < 1e-12
     ) {
 
-        value = 0;
+        value =
+            0;
 
     }
 
 
     return Number(
-        value.toPrecision(12)
+        value.toPrecision(
+            12
+        )
     ).toString();
+
 }
 
 
