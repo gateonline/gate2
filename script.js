@@ -1,310 +1,680 @@
+/* =====================================================
+   POLYMER GATE - EXAM SCRIPT
+   ===================================================== */
+
+
+/* =====================================================
+   EXAM VARIABLES
+   ===================================================== */
+
 let current = 0;
 
-let answers = new Array(questions.length).fill(null);
+let answers =
+    new Array(questions.length).fill(null);
 
-let review = new Array(questions.length).fill(false);
+let review =
+    new Array(questions.length).fill(false);
 
-let examStarted = false;
-
-let submitted = false;
-
-let timeLeft = 60 * 60; // 1 hour
+let examEnded = false;
 
 let timerInterval = null;
 
+let angleMode = "DEG";
 
-// ==============================
-// START EXAM
-// ==============================
+
+/* =====================================================
+   EXAM TIME
+   ===================================================== */
+
+/*
+   TOTAL EXAM TIME = 1 HOUR
+
+   60 × 60 = 3600 seconds
+*/
+
+const EXAM_TIME = 60 * 60;
+
+
+/* =====================================================
+   PAGE LOAD
+   ===================================================== */
+
+window.addEventListener(
+    "load",
+    function () {
+
+        document.getElementById(
+            "totalQuestions"
+        ).innerText = questions.length;
+
+        console.log(
+            "POLYMER GATE loaded."
+        );
+
+    }
+);
+
+
+/* =====================================================
+   START EXAM
+   ===================================================== */
 
 function startExam() {
 
-    examStarted = true;
-
-    document.getElementById("introScreen").style.display = "none";
-
-    document.getElementById("examScreen").style.display = "block";
+    clearInterval(timerInterval);
 
     current = 0;
 
+    answers =
+        new Array(
+            questions.length
+        ).fill(null);
+
+    review =
+        new Array(
+            questions.length
+        ).fill(false);
+
+    examEnded = false;
+
+
+    /*
+       Record start time
+    */
+
+    let startTime =
+        Date.now();
+
+    sessionStorage.setItem(
+        "gateExamStartTime",
+        startTime
+    );
+
+
+    /*
+       Hide start screen
+    */
+
+    document.getElementById(
+        "startScreen"
+    ).style.display = "none";
+
+
+    /*
+       Show exam
+    */
+
+    document.getElementById(
+        "examArea"
+    ).style.display = "flex";
+
+
+    /*
+       Enable calculator
+    */
+
+    document.getElementById(
+        "calculatorButton"
+    ).disabled = false;
+
+
+    /*
+       Load first question
+    */
+
     loadQuestion();
 
-    startTimer();
-}
+
+    /*
+       Create palette
+    */
+
+    updatePalette();
 
 
-// ==============================
-// TIMER
-// ==============================
-
-function startTimer() {
+    /*
+       Start timer
+    */
 
     updateTimer();
 
-    timerInterval = setInterval(function () {
-
-        timeLeft--;
-
-        updateTimer();
-
-        if (timeLeft <= 0) {
-
-            clearInterval(timerInterval);
-
-            alert("Time is over. Your exam will be submitted automatically.");
-
-            submitExam(true);
-
-        }
-
-    }, 1000);
+    timerInterval =
+        setInterval(
+            updateTimer,
+            1000
+        );
 }
 
 
-function updateTimer() {
-
-    let minutes = Math.floor(timeLeft / 60);
-
-    let seconds = timeLeft % 60;
-
-    let displayMinutes = String(minutes).padStart(2, "0");
-
-    let displaySeconds = String(seconds).padStart(2, "0");
-
-    document.getElementById("timer").innerText =
-        displayMinutes + ":" + displaySeconds;
-}
-
-
-// ==============================
-// LOAD QUESTION
-// ==============================
+/* =====================================================
+   LOAD QUESTION
+   ===================================================== */
 
 function loadQuestion() {
 
-    if (!examStarted) {
+    let q =
+        questions[current];
+
+
+    if (!q) {
+
+        console.error(
+            "Question not found:",
+            current
+        );
+
         return;
     }
 
-    let q = questions[current];
 
-    document.getElementById("question").innerText =
-        "Q" + (current + 1) + ". " + q.question;
+    /*
+       Question number
+    */
 
-
-    let optionsHTML = "";
-
-    let natHTML = "";
-
-
-    // MCQ / MSQ
-
-    if (q.type === "MCQ" || q.type === "MSQ") {
-
-        q.options.forEach(function(opt, i) {
-
-            let checked = "";
-
-            if (q.type === "MCQ") {
-
-                checked =
-                    answers[current] === i
-                    ? "checked"
-                    : "";
-
-            }
-
-            if (q.type === "MSQ") {
-
-                if (
-                    Array.isArray(answers[current]) &&
-                    answers[current].includes(i)
-                ) {
-
-                    checked = "checked";
-
-                }
-
-            }
+    document.getElementById(
+        "currentQuestion"
+    ).innerText =
+        current + 1;
 
 
-            let inputType =
-                q.type === "MCQ"
-                ? "radio"
-                : "checkbox";
+    /*
+       Question
+    */
+
+    document.getElementById(
+        "question"
+    ).innerText =
+        "Q" +
+        (current + 1) +
+        ". " +
+        q.question;
 
 
-            optionsHTML += `
-                <label class="option">
-                    <input
-                        type="${inputType}"
-                        name="option"
-                        value="${i}"
-                        ${checked}>
-                    ${opt}
-                </label>
-            `;
+    /*
+       Determine question type
+    */
 
-        });
-
-    }
+    let type =
+        getQuestionType(q);
 
 
-    // NAT
+    document.getElementById(
+        "questionType"
+    ).innerText =
+        type;
 
-    if (q.type === "NAT") {
 
-        let existingAnswer =
-            answers[current] !== null
-            ? answers[current]
-            : "";
+    /*
+       Determine marks
+    */
 
-        natHTML = `
+    let marks =
+        getQuestionMarks(
+            q,
+            current
+        );
 
-            <div class="nat-container">
 
-                <p>
-                    Enter your answer. Answer may be entered
-                    up to 2 decimal places.
-                </p>
+    document.getElementById(
+        "questionMarks"
+    ).innerText =
+        marks +
+        (marks === 1 ? " Mark" : " Marks");
+
+
+    /*
+       Load options
+    */
+
+    let optionsContainer =
+        document.getElementById(
+            "options"
+        );
+
+
+    optionsContainer.innerHTML = "";
+
+
+    /*
+       NAT question
+    */
+
+    if (
+        type === "NAT" ||
+        type === "NUMERICAL"
+    ) {
+
+        let savedValue =
+            answers[current] === null
+                ? ""
+                : answers[current];
+
+        optionsContainer.innerHTML = `
+
+            <div class="nat-input-container">
 
                 <input
-                    type="number"
-                    step="0.01"
                     id="natAnswer"
-                    value="${existingAnswer}"
-                    placeholder="Enter answer">
+                    class="nat-input"
+                    type="number"
+                    step="any"
+                    value="${escapeAttribute(savedValue)}"
+                    placeholder="Enter numerical answer"
+                    autocomplete="off"
+                >
+
+                <div class="nat-instruction">
+                    Enter your numerical answer.
+                </div>
 
             </div>
 
         `;
 
+        return;
     }
 
 
-    document.getElementById("options").innerHTML =
-        optionsHTML;
+    /*
+       MSQ / MCQ
+    */
 
-    document.getElementById("natInput").innerHTML =
-        natHTML;
+    let multiple =
+        type === "MSQ" ||
+        type === "MULTIPLE SELECT";
+
+
+    q.options.forEach(
+        function (opt, i) {
+
+            let checked = false;
+
+
+            /*
+               MSQ
+            */
+
+            if (multiple) {
+
+                checked =
+                    Array.isArray(
+                        answers[current]
+                    ) &&
+                    answers[current].includes(i);
+
+            }
+
+
+            /*
+               MCQ
+            */
+
+            else {
+
+                checked =
+                    answers[current] === i;
+
+            }
+
+
+            let inputType =
+                multiple
+                    ? "checkbox"
+                    : "radio";
+
+
+            let inputName =
+                multiple
+                    ? "option[]"
+                    : "option";
+
+
+            let label =
+                document.createElement(
+                    "label"
+                );
+
+
+            label.innerHTML = `
+
+                <input
+                    type="${inputType}"
+                    name="${inputName}"
+                    value="${i}"
+                    ${checked ? "checked" : ""}
+                >
+
+                <span>
+                    ${opt}
+                </span>
+
+            `;
+
+
+            optionsContainer.appendChild(
+                label
+            );
+
+        }
+    );
+}
+
+
+/* =====================================================
+   QUESTION TYPE
+   ===================================================== */
+
+function getQuestionType(q) {
+
+    let type =
+        q.type ||
+        q.questionType ||
+        q.kind ||
+        "MCQ";
+
+
+    type =
+        String(type)
+            .trim()
+            .toUpperCase();
+
+
+    if (
+        type === "NUM" ||
+        type === "NUMERICAL"
+    ) {
+
+        return "NAT";
+
+    }
+
+
+    return type;
+}
+
+
+/* =====================================================
+   QUESTION MARKS
+   ===================================================== */
+
+function getQuestionMarks(q, index) {
+
+    /*
+       If questions.js explicitly contains marks,
+       use that value.
+    */
+
+    if (
+        q.marks !== undefined &&
+        q.marks !== null
+    ) {
+
+        return Number(
+            q.marks
+        );
+
+    }
+
+
+    /*
+       New exam structure:
+
+       Q1-Q10  = 1 mark
+       Q11     = 2 marks
+       Q12-Q16 = 1 mark
+       Q17-Q25 = 2 marks
+    */
+
+    let number =
+        index + 1;
+
+
+    if (
+        number >= 1 &&
+        number <= 10
+    ) {
+
+        return 1;
+
+    }
+
+
+    if (
+        number === 11
+    ) {
+
+        return 2;
+
+    }
+
+
+    if (
+        number >= 12 &&
+        number <= 16
+    ) {
+
+        return 1;
+
+    }
+
+
+    if (
+        number >= 17 &&
+        number <= 25
+    ) {
+
+        return 2;
+
+    }
+
+
+    return 1;
+}
+
+
+/* =====================================================
+   SAVE CURRENT ANSWER
+   ===================================================== */
+
+function saveCurrentAnswer() {
+
+    let q =
+        questions[current];
+
+    let type =
+        getQuestionType(q);
+
+
+    /*
+       NAT
+    */
+
+    if (
+        type === "NAT" ||
+        type === "NUMERICAL"
+    ) {
+
+        let input =
+            document.getElementById(
+                "natAnswer"
+            );
+
+
+        if (!input) {
+
+            return false;
+
+        }
+
+
+        let value =
+            input.value.trim();
+
+
+        if (value === "") {
+
+            answers[current] =
+                null;
+
+            return false;
+
+        }
+
+
+        let number =
+            Number(value);
+
+
+        if (!Number.isFinite(number)) {
+
+            return false;
+
+        }
+
+
+        answers[current] =
+            number;
+
+        return true;
+    }
+
+
+    /*
+       MSQ
+    */
+
+    if (
+        type === "MSQ" ||
+        type === "MULTIPLE SELECT"
+    ) {
+
+        let selected =
+            document.querySelectorAll(
+                'input[name="option[]"]:checked'
+            );
+
+
+        let values =
+            Array.from(
+                selected
+            ).map(
+                function (el) {
+                    return Number(
+                        el.value
+                    );
+                }
+            );
+
+
+        if (
+            values.length === 0
+        ) {
+
+            answers[current] =
+                null;
+
+            return false;
+
+        }
+
+
+        answers[current] =
+            values.sort(
+                function (a, b) {
+                    return a - b;
+                }
+            );
+
+
+        return true;
+    }
+
+
+    /*
+       MCQ
+    */
+
+    let selected =
+        document.querySelector(
+            'input[name="option"]:checked'
+        );
+
+
+    if (selected) {
+
+        answers[current] =
+            parseInt(
+                selected.value
+            );
+
+        return true;
+    }
+
+
+    return false;
+}
+
+
+/* =====================================================
+   SAVE & NEXT
+   ===================================================== */
+
+function saveNext() {
+
+    let answered =
+        saveCurrentAnswer();
+
+
+    if (answered) {
+
+        review[current] =
+            false;
+
+    }
 
 
     updatePalette();
 
-}
 
-
-// ==============================
-// SAVE ANSWER
-// ==============================
-
-function saveCurrentAnswer() {
-
-    let q = questions[current];
-
-
-    // MCQ
-
-    if (q.type === "MCQ") {
-
-        let selected =
-            document.querySelector(
-                'input[name="option"]:checked'
-            );
-
-        if (selected) {
-
-            answers[current] =
-                parseInt(selected.value);
-
-        }
-
-    }
-
-
-    // MSQ
-
-    else if (q.type === "MSQ") {
-
-        let selected =
-            document.querySelectorAll(
-                'input[name="option"]:checked'
-            );
-
-        let selectedAnswers = [];
-
-        selected.forEach(function(input) {
-
-            selectedAnswers.push(
-                parseInt(input.value)
-            );
-
-        });
-
-        answers[current] =
-            selectedAnswers.length > 0
-            ? selectedAnswers
-            : null;
-
-    }
-
-
-    // NAT
-
-    else if (q.type === "NAT") {
-
-        let input =
-            document.getElementById("natAnswer");
-
-        if (input && input.value !== "") {
-
-            answers[current] =
-                parseFloat(input.value);
-
-        }
-
-    }
-
-}
-
-
-// ==============================
-// SAVE & NEXT
-// ==============================
-
-function saveNext() {
-
-    saveCurrentAnswer();
-
-    review[current] = false;
-
-    if (current < questions.length - 1) {
+    if (
+        current <
+        questions.length - 1
+    ) {
 
         current++;
 
         loadQuestion();
 
     }
+
     else {
 
-        updatePalette();
-
-        alert("This is the last question.");
+        loadQuestion();
 
     }
-
 }
 
 
-// ==============================
-// PREVIOUS
-// ==============================
+/* =====================================================
+   PREVIOUS
+   ===================================================== */
 
 function prevQuestion() {
 
-    saveCurrentAnswer();
+    let answered =
+        saveCurrentAnswer();
 
-    review[current] = false;
+
+    if (answered) {
+
+        review[current] =
+            false;
+
+    }
+
+
+    updatePalette();
+
 
     if (current > 0) {
 
@@ -313,48 +683,60 @@ function prevQuestion() {
         loadQuestion();
 
     }
-
 }
 
 
-// ==============================
-// CLEAR
-// ==============================
+/* =====================================================
+   CLEAR RESPONSE
+   ===================================================== */
 
 function clearResponse() {
 
-    answers[current] = null;
+    answers[current] =
+        null;
 
-    review[current] = false;
+    review[current] =
+        false;
 
     loadQuestion();
 
+    updatePalette();
 }
 
 
-// ==============================
-// MARK FOR REVIEW
-// ==============================
+/* =====================================================
+   MARK FOR REVIEW
+   ===================================================== */
 
 function markReview() {
 
     saveCurrentAnswer();
 
-    review[current] = true;
+    review[current] =
+        true;
 
     updatePalette();
-
 }
 
 
-// ==============================
-// PALETTE
-// ==============================
+/* =====================================================
+   QUESTION PALETTE
+   ===================================================== */
 
 function updatePalette() {
 
     let palette =
-        document.getElementById("palette");
+        document.getElementById(
+            "palette"
+        );
+
+
+    if (!palette) {
+
+        return;
+
+    }
+
 
     palette.innerHTML = "";
 
@@ -365,18 +747,34 @@ function updatePalette() {
         i++
     ) {
 
-        let colorClass = "not-answered";
+        let colorClass =
+            "not-answered";
 
 
-        if (review[i]) {
+        /*
+           Review takes priority
+        */
 
-            colorClass = "review";
+        if (
+            review[i]
+        ) {
+
+            colorClass =
+                "review";
 
         }
 
-        else if (hasAnswer(i)) {
 
-            colorClass = "answered";
+        /*
+           Answered
+        */
+
+        else if (
+            answers[i] !== null
+        ) {
+
+            colorClass =
+                "answered";
 
         }
 
@@ -385,56 +783,558 @@ function updatePalette() {
 
             <button
                 class="${colorClass}"
-                onclick="jump(${i})">
-
+                onclick="jump(${i})"
+            >
                 ${i + 1}
-
             </button>
 
         `;
 
     }
-
 }
 
 
-function hasAnswer(index) {
-
-    let answer = answers[index];
-
-    if (answer === null) {
-        return false;
-    }
-
-    if (Array.isArray(answer)) {
-
-        return answer.length > 0;
-
-    }
-
-    return true;
-
-}
-
-
-// ==============================
-// JUMP
-// ==============================
+/* =====================================================
+   JUMP TO QUESTION
+   ===================================================== */
 
 function jump(i) {
 
-    saveCurrentAnswer();
+    let answered =
+        saveCurrentAnswer();
 
-    current = i;
+
+    if (answered) {
+
+        review[current] =
+            false;
+
+    }
+
+
+    updatePalette();
+
+
+    current =
+        i;
+
 
     loadQuestion();
-
 }
 
 
-// ==============================
-// CALCULATE SCORE
-// ==============================
+/* =====================================================
+   TIMER
+   ===================================================== */
+
+function updateTimer() {
+
+    if (examEnded) {
+
+        return;
+
+    }
+
+
+    let startTime =
+        Number(
+            sessionStorage.getItem(
+                "gateExamStartTime"
+            )
+        );
+
+
+    if (!startTime) {
+
+        return;
+
+    }
+
+
+    let elapsed =
+        Math.floor(
+            (
+                Date.now() -
+                startTime
+            ) / 1000
+        );
+
+
+    let remaining =
+        EXAM_TIME -
+        elapsed;
+
+
+    /*
+       TIME OVER
+    */
+
+    if (
+        remaining <= 0
+    ) {
+
+        document.getElementById(
+            "timer"
+        ).innerText =
+            "00:00";
+
+
+        clearInterval(
+            timerInterval
+        );
+
+
+        examEnded =
+            true;
+
+
+        /*
+           Save current answer
+        */
+
+        saveCurrentAnswer();
+
+
+        /*
+           Automatically request
+           candidate details
+        */
+
+        openNameModal(
+            true
+        );
+
+
+        return;
+    }
+
+
+    let minutes =
+        Math.floor(
+            remaining / 60
+        );
+
+
+    let seconds =
+        remaining % 60;
+
+
+    document.getElementById(
+        "timer"
+    ).innerText =
+
+        String(minutes)
+            .padStart(2, "0")
+
+        +
+
+        ":"
+
+        +
+
+        String(seconds)
+            .padStart(2, "0");
+
+
+    /*
+       Last 5 minutes
+    */
+
+    let timerBox =
+        document.querySelector(
+            ".timer-box"
+        );
+
+
+    if (
+        remaining <= 300
+    ) {
+
+        timerBox.classList.add(
+            "timer-warning"
+        );
+
+    }
+}
+
+
+/* =====================================================
+   SUBMIT BUTTON
+   ===================================================== */
+
+function submitExam() {
+
+    saveCurrentAnswer();
+
+    updatePalette();
+
+
+    document.getElementById(
+        "submitModal"
+    ).style.display =
+        "flex";
+}
+
+
+/* =====================================================
+   CLOSE SUBMIT MODAL
+   ===================================================== */
+
+function closeSubmitModal() {
+
+    if (examEnded) {
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "submitModal"
+    ).style.display =
+        "none";
+}
+
+
+/* =====================================================
+   CONFIRM SUBMISSION
+   ===================================================== */
+
+function confirmSubmit() {
+
+    closeSubmitModal();
+
+
+    saveCurrentAnswer();
+
+
+    examEnded =
+        true;
+
+
+    clearInterval(
+        timerInterval
+    );
+
+
+    openNameModal(
+        false
+    );
+}
+
+
+/* =====================================================
+   CANDIDATE DETAILS
+   ===================================================== */
+
+function openNameModal(autoSubmit) {
+
+    if (autoSubmit) {
+
+        examEnded =
+            true;
+
+        clearInterval(
+            timerInterval
+        );
+
+    }
+
+
+    saveCurrentAnswer();
+
+    updatePalette();
+
+
+    document.getElementById(
+        "candidateName"
+    ).value = "";
+
+
+    document.getElementById(
+        "candidateMobile"
+    ).value = "";
+
+
+    document.getElementById(
+        "nameModal"
+    ).style.display =
+        "flex";
+
+
+    setTimeout(
+        function () {
+
+            document.getElementById(
+                "candidateName"
+            ).focus();
+
+        },
+        100
+    );
+}
+
+
+/* =====================================================
+   FINAL SUBMIT
+   ===================================================== */
+
+function finalSubmit() {
+
+    let name =
+        document.getElementById(
+            "candidateName"
+        ).value.trim();
+
+
+    let mobile =
+        document.getElementById(
+            "candidateMobile"
+        ).value.trim();
+
+
+    /*
+       Validate name
+    */
+
+    if (
+        name === ""
+    ) {
+
+        alert(
+            "Please enter your name."
+        );
+
+        document.getElementById(
+            "candidateName"
+        ).focus();
+
+        return;
+
+    }
+
+
+    /*
+       Validate mobile
+    */
+
+    if (
+        !/^[0-9]{10}$/.test(
+            mobile
+        )
+    ) {
+
+        alert(
+            "Please enter a valid 10-digit mobile number."
+        );
+
+        document.getElementById(
+            "candidateMobile"
+        ).focus();
+
+        return;
+
+    }
+
+
+    /*
+       Save current answer one final time
+    */
+
+    saveCurrentAnswer();
+
+
+    /*
+       Calculate score
+    */
+
+    let score =
+        calculateScore();
+
+
+    /*
+       Google Apps Script URL
+
+       IMPORTANT:
+       Replace this with the NEW
+       deployment URL of the Sheet2
+       Apps Script.
+    */
+
+    const SCRIPT_URL =
+        "PASTE_NEW_SHEET2_APPS_SCRIPT_URL_HERE";
+
+
+    /*
+       Build URL
+    */
+
+    let url =
+        SCRIPT_URL;
+
+
+    url +=
+        "?name=" +
+        encodeURIComponent(
+            name
+        );
+
+
+    url +=
+        "&mobile=" +
+        encodeURIComponent(
+            mobile
+        );
+
+
+    /*
+       Send all answers
+    */
+
+    for (
+        let i = 0;
+        i < questions.length;
+        i++
+    ) {
+
+        let answer =
+            answers[i];
+
+
+        if (
+            Array.isArray(answer)
+        ) {
+
+            answer =
+                answer.join(",");
+
+        }
+
+
+        if (
+            answer === null ||
+            answer === undefined
+        ) {
+
+            answer = "";
+
+        }
+
+
+        url +=
+            "&q" +
+            (i + 1) +
+            "=" +
+            encodeURIComponent(
+                answer
+            );
+
+    }
+
+
+    /*
+       Score
+    */
+
+    url +=
+        "&score=" +
+        encodeURIComponent(
+            score
+        );
+
+
+    /*
+       Total marks
+    */
+
+    url +=
+        "&totalMarks=" +
+        encodeURIComponent(
+            getTotalMarks()
+        );
+
+
+    /*
+       Send silently through iframe
+    */
+
+    let iframe =
+        document.createElement(
+            "iframe"
+        );
+
+
+    iframe.style.display =
+        "none";
+
+
+    iframe.src =
+        url;
+
+
+    document.body.appendChild(
+        iframe
+    );
+
+
+    /*
+       Hide candidate modal
+    */
+
+    document.getElementById(
+        "nameModal"
+    ).style.display =
+        "none";
+
+
+    /*
+       Show result
+    */
+
+    document.getElementById(
+        "resultName"
+    ).innerText =
+        "Candidate: " +
+        name;
+
+
+    document.getElementById(
+        "resultMobile"
+    ).innerText =
+        "Mobile: " +
+        mobile;
+
+
+    document.getElementById(
+        "resultScore"
+    ).innerText =
+        score +
+        " / " +
+        getTotalMarks();
+
+
+    setTimeout(
+        function () {
+
+            document.getElementById(
+                "resultModal"
+            ).style.display =
+                "flex";
+
+        },
+        800
+    );
+
+
+    sessionStorage.removeItem(
+        "gateExamStartTime"
+    );
+}
+
+
+/* =====================================================
+   SCORE CALCULATION
+   ===================================================== */
 
 function calculateScore() {
 
@@ -447,92 +1347,131 @@ function calculateScore() {
         i++
     ) {
 
-        let q = questions[i];
+        let q =
+            questions[i];
 
-        let userAnswer = answers[i];
+
+        let type =
+            getQuestionType(q);
 
 
-        if (!hasAnswer(i)) {
+        let marks =
+            getQuestionMarks(
+                q,
+                i
+            );
+
+
+        let studentAnswer =
+            answers[i];
+
+
+        /*
+           Unanswered
+        */
+
+        if (
+            studentAnswer === null ||
+            studentAnswer === undefined
+        ) {
 
             continue;
 
         }
 
 
-        // =====================
-        // MCQ
-        // =====================
+        /*
+           NAT
+        */
 
-        if (q.type === "MCQ") {
+        if (
+            type === "NAT" ||
+            type === "NUMERICAL"
+        ) {
 
-            if (userAnswer === q.answer) {
+            if (
+                checkNAT(
+                    q,
+                    studentAnswer
+                )
+            ) {
 
-                score += q.marks;
+                score += marks;
 
             }
+
+            continue;
+        }
+
+
+        /*
+           MSQ
+        */
+
+        if (
+            type === "MSQ" ||
+            type === "MULTIPLE SELECT"
+        ) {
+
+            if (
+                checkMSQ(
+                    q,
+                    studentAnswer
+                )
+            ) {
+
+                score += marks;
+
+            }
+
+            continue;
+        }
+
+
+        /*
+           MCQ
+        */
+
+        if (
+            checkMCQ(
+                q,
+                studentAnswer
+            )
+        ) {
+
+            score += marks;
+
+        }
+
+        else {
+
+            /*
+               Negative marking only
+               for MCQ.
+
+               Default:
+               1-mark MCQ = -1/3
+               2-mark MCQ = -2/3
+
+               If questions.js defines
+               negativeMarks, use that.
+            */
+
+            if (
+                q.negativeMarks !== undefined
+            ) {
+
+                score -=
+                    Number(
+                        q.negativeMarks
+                    );
+
+            }
+
             else {
 
-                score -= 1;
-
-            }
-
-        }
-
-
-        // =====================
-        // MSQ
-        // =====================
-
-        else if (q.type === "MSQ") {
-
-            let correct =
-                Array.isArray(q.answer)
-                ? q.answer
-                : [q.answer];
-
-            let user =
-                Array.isArray(userAnswer)
-                ? userAnswer
-                : [userAnswer];
-
-
-            correct.sort();
-            user.sort();
-
-
-            if (
-                JSON.stringify(correct) ===
-                JSON.stringify(user)
-            ) {
-
-                score += q.marks;
-
-            }
-
-        }
-
-
-        // =====================
-        // NAT
-        // =====================
-
-        else if (q.type === "NAT") {
-
-            let correctAnswer =
-                parseFloat(q.answer);
-
-            let studentAnswer =
-                parseFloat(userAnswer);
-
-
-            if (
-                !isNaN(studentAnswer) &&
-                Math.abs(
-                    studentAnswer - correctAnswer
-                ) < 0.005
-            ) {
-
-                score += q.marks;
+                score -=
+                    marks / 3;
 
             }
 
@@ -541,182 +1480,383 @@ function calculateScore() {
     }
 
 
-    return score;
+    /*
+       Prevent negative total
+    */
 
+    if (
+        score < 0
+    ) {
+
+        score = 0;
+
+    }
+
+
+    /*
+       Round score
+    */
+
+    return Number(
+        score.toFixed(2)
+    );
 }
 
 
-// ==============================
-// SUBMIT EXAM
-// ==============================
+/* =====================================================
+   TOTAL MARKS
+   ===================================================== */
 
-function submitExam(autoSubmit = false) {
+function getTotalMarks() {
 
-    if (submitted) {
-        return;
-    }
-
-
-    saveCurrentAnswer();
-
-
-    if (!autoSubmit) {
-
-        let confirmSubmit =
-            confirm(
-                "Are you sure you want to submit the exam?"
-            );
-
-        if (!confirmSubmit) {
-            return;
-        }
-
-    }
-
-
-    submitted = true;
-
-
-    if (timerInterval) {
-
-        clearInterval(timerInterval);
-
-    }
-
-
-    let name =
-        prompt("Enter your name");
-
-
-    if (!name || name.trim() === "") {
-
-        name = "Student";
-
-    }
-
-
-    let score =
-        calculateScore();
-
-
-    sendResultToGoogleSheet(
-        name,
-        score
-    );
-
-
-    alert(
-        "Exam submitted successfully!\n\n" +
-        "Name: " + name +
-        "\nScore: " + score + " / 35"
-    );
-
-
-    document.getElementById("examScreen").innerHTML = `
-
-        <div class="result-screen">
-
-            <h1>Exam Submitted</h1>
-
-            <h2>${name}</h2>
-
-            <div class="final-score">
-
-                ${score} / 35
-
-            </div>
-
-            <p>
-                Your response has been recorded.
-            </p>
-
-        </div>
-
-    `;
-
-}
-
-
-// ==============================
-// GOOGLE SHEET
-// ==============================
-
-function sendResultToGoogleSheet(
-    name,
-    score
-) {
-
-    let url =
-        "https://script.google.com/macros/s/AKfycbw_AyF_eyKtsgT-ufYemQjAa6QxhOzzySsmJCY45fxeBZtT2xc0O-ARRlpdv2PQVX7Piw/exec";
-
-
-    url +=
-        "?name=" +
-        encodeURIComponent(name);
-
-
-    url +=
-        "&score=" +
-        encodeURIComponent(score);
+    let total = 0;
 
 
     for (
         let i = 0;
-        i < answers.length;
+        i < questions.length;
         i++
     ) {
 
-        let answer = answers[i];
-
-
-        if (Array.isArray(answer)) {
-
-            answer = answer.join(",");
-
-        }
-
-
-        if (answer === null) {
-
-            answer = "";
-
-        }
-
-
-        url +=
-            "&q" +
-            (i + 1) +
-            "=" +
-            encodeURIComponent(answer);
+        total +=
+            getQuestionMarks(
+                questions[i],
+                i
+            );
 
     }
 
 
-    fetch(url, {
-        method: "GET",
-        mode: "no-cors"
-    })
-    .catch(function(error) {
+    return total;
+}
 
-        console.log(
-            "Sheet submission error:",
-            error
+
+/* =====================================================
+   MCQ CHECK
+   ===================================================== */
+
+function checkMCQ(
+    q,
+    studentAnswer
+) {
+
+    let correct =
+        q.answer;
+
+
+    /*
+       If answer is stored as
+       an option index.
+    */
+
+    if (
+        Number.isInteger(
+            correct
+        )
+    ) {
+
+        return (
+            Number(
+                studentAnswer
+            ) ===
+            Number(
+                correct
+            )
         );
 
-    });
+    }
+
+
+    /*
+       If answer is stored as
+       A/B/C/D.
+    */
+
+    if (
+        typeof correct === "string"
+    ) {
+
+        let normalized =
+            correct
+                .trim()
+                .toUpperCase();
+
+
+        if (
+            /^[A-D]$/.test(
+                normalized
+            )
+        ) {
+
+            let correctIndex =
+                normalized.charCodeAt(0)
+                -
+                "A".charCodeAt(0);
+
+
+            return (
+                Number(
+                    studentAnswer
+                ) ===
+                correctIndex
+            );
+
+        }
+
+    }
+
+
+    return (
+        String(
+            studentAnswer
+        ) ===
+        String(
+            correct
+        )
+    );
+}
+
+
+/* =====================================================
+   MSQ CHECK
+   ===================================================== */
+
+function checkMSQ(
+    q,
+    studentAnswer
+) {
+
+    let correct =
+        q.answer;
+
+
+    /*
+       Convert correct answer
+       to an array.
+    */
+
+    if (
+        !Array.isArray(
+            correct
+        )
+    ) {
+
+        if (
+            typeof correct === "string"
+        ) {
+
+            correct =
+                correct
+                    .split(",")
+                    .map(
+                        function (x) {
+
+                            return x
+                                .trim();
+
+                        }
+                    );
+
+        }
+
+        else {
+
+            correct =
+                [correct];
+
+        }
+
+    }
+
+
+    /*
+       Convert A/B/C/D answers
+       to indices if required.
+    */
+
+    correct =
+        correct.map(
+            function (item) {
+
+                if (
+                    typeof item === "string" &&
+                    /^[A-D]$/i.test(
+                        item.trim()
+                    )
+                ) {
+
+                    return (
+                        item
+                            .trim()
+                            .toUpperCase()
+                            .charCodeAt(0)
+                        -
+                        "A".charCodeAt(0)
+                    );
+
+                }
+
+                return Number(item);
+
+            }
+        );
+
+
+    let student =
+        Array.isArray(
+            studentAnswer
+        )
+            ? studentAnswer
+            : [studentAnswer];
+
+
+    student =
+        student.map(
+            Number
+        );
+
+
+    correct.sort(
+        function (a, b) {
+            return a - b;
+        }
+    );
+
+
+    student.sort(
+        function (a, b) {
+            return a - b;
+        }
+    );
+
+
+    return (
+        JSON.stringify(
+            correct
+        ) ===
+        JSON.stringify(
+            student
+        )
+    );
+}
+
+
+/* =====================================================
+   NAT CHECK
+   ===================================================== */
+
+function checkNAT(
+    q,
+    studentAnswer
+) {
+
+    let correct =
+        Number(
+            q.answer
+        );
+
+
+    let student =
+        Number(
+            studentAnswer
+        );
+
+
+    if (
+        !Number.isFinite(
+            correct
+        ) ||
+        !Number.isFinite(
+            student
+        )
+    ) {
+
+        return false;
+
+    }
+
+
+    /*
+       Use tolerance if supplied.
+
+       Supported fields:
+
+       q.tolerance
+       q.tol
+       q.range
+    */
+
+    if (
+        q.tolerance !== undefined
+    ) {
+
+        return (
+            Math.abs(
+                student -
+                correct
+            ) <=
+            Number(
+                q.tolerance
+            )
+        );
+
+    }
+
+
+    if (
+        q.tol !== undefined
+    ) {
+
+        return (
+            Math.abs(
+                student -
+                correct
+            ) <=
+            Number(
+                q.tol
+            )
+        );
+
+    }
+
+
+    /*
+       If no tolerance is specified,
+       compare to 2 decimal places.
+    */
+
+    return (
+        Number(
+            student.toFixed(2)
+        ) ===
+        Number(
+            correct.toFixed(2)
+        )
+    );
+}
+
+
+/* =====================================================
+   RESULT
+   ===================================================== */
+
+function closeResultAndReload() {
+
+    location.reload();
 
 }
 
 
-// ==============================
-// CALCULATOR
-// ==============================
+/* =====================================================
+   CALCULATOR
+   ===================================================== */
 
 function openCalculator() {
 
     document.getElementById(
         "calculator"
-    ).style.display = "block";
+    ).style.display =
+        "block";
 
 }
 
@@ -725,47 +1865,556 @@ function closeCalculator() {
 
     document.getElementById(
         "calculator"
-    ).style.display = "none";
+    ).style.display =
+        "none";
 
 }
 
 
 function calcInput(value) {
 
-    document.getElementById(
-        "calcDisplay"
-    ).value += value;
+    let display =
+        document.getElementById(
+            "calc-display"
+        );
+
+
+    display.value +=
+        value;
 
 }
 
 
-function clearCalculator() {
+function calcClear() {
 
     document.getElementById(
-        "calcDisplay"
+        "calc-display"
     ).value = "";
 
 }
 
 
-function calculate() {
+function calcBackspace() {
 
     let display =
         document.getElementById(
-            "calcDisplay"
+            "calc-display"
         );
+
+
+    display.value =
+        display.value.slice(
+            0,
+            -1
+        );
+
+}
+
+
+/* =====================================================
+   CALCULATOR ANGLE MODE
+   ===================================================== */
+
+function toggleAngleMode() {
+
+    if (
+        angleMode === "DEG"
+    ) {
+
+        angleMode =
+            "RAD";
+
+    }
+
+    else {
+
+        angleMode =
+            "DEG";
+
+    }
+
+
+    document.getElementById(
+        "angleModeButton"
+    ).innerText =
+        angleMode;
+}
+
+
+/* =====================================================
+   CALCULATOR FUNCTIONS
+   ===================================================== */
+
+function calcFunction(
+    operation
+) {
+
+    let display =
+        document.getElementById(
+            "calc-display"
+        );
+
+
+    let value =
+        Number(
+            display.value
+        );
+
+
+    if (
+        !Number.isFinite(
+            value
+        )
+    ) {
+
+        display.value =
+            "Error";
+
+        return;
+
+    }
+
+
+    let result;
+
+
+    switch (
+        operation
+    ) {
+
+        case "sin":
+
+            result =
+                Math.sin(
+                    toRadians(
+                        value
+                    )
+                );
+
+            break;
+
+
+        case "cos":
+
+            result =
+                Math.cos(
+                    toRadians(
+                        value
+                    )
+                );
+
+            break;
+
+
+        case "tan":
+
+            result =
+                Math.tan(
+                    toRadians(
+                        value
+                    )
+                );
+
+            break;
+
+
+        case "asin":
+
+            result =
+                fromRadians(
+                    Math.asin(
+                        value
+                    )
+                );
+
+            break;
+
+
+        case "acos":
+
+            result =
+                fromRadians(
+                    Math.acos(
+                        value
+                    )
+                );
+
+            break;
+
+
+        case "atan":
+
+            result =
+                fromRadians(
+                    Math.atan(
+                        value
+                    )
+                );
+
+            break;
+
+
+        case "log":
+
+            result =
+                Math.log10(
+                    value
+                );
+
+            break;
+
+
+        case "ln":
+
+            result =
+                Math.log(
+                    value
+                );
+
+            break;
+
+
+        case "sqrt":
+
+        case "squareRoot":
+
+            result =
+                Math.sqrt(
+                    value
+                );
+
+            break;
+
+
+        case "inverse":
+
+            result =
+                1 / value;
+
+            break;
+
+
+        case "abs":
+
+            result =
+                Math.abs(
+                    value
+                );
+
+            break;
+
+
+        case "sign":
+
+            result =
+                -value;
+
+            break;
+
+
+        case "exp":
+
+            result =
+                Math.exp(
+                    value
+                );
+
+            break;
+
+
+        case "factorial":
+
+            result =
+                factorial(
+                    value
+                );
+
+            break;
+
+
+        default:
+
+            return;
+
+    }
+
+
+    if (
+        Number.isFinite(
+            result
+        )
+    ) {
+
+        display.value =
+            formatCalculatorResult(
+                result
+            );
+
+    }
+
+    else {
+
+        display.value =
+            "Error";
+
+    }
+}
+
+
+/* =====================================================
+   CALCULATOR EVALUATION
+   ===================================================== */
+
+function calculateResult() {
+
+    let display =
+        document.getElementById(
+            "calc-display"
+        );
+
+
+    let expression =
+        display.value;
+
+
+    if (
+        expression.trim() === ""
+    ) {
+
+        return;
+
+    }
+
 
     try {
 
+        /*
+           Power operator
+        */
+
+        expression =
+            expression.replace(
+                /\^/g,
+                "**"
+            );
+
+
+        /*
+           Percentage
+
+           50% → (50/100)
+        */
+
+        expression =
+            expression.replace(
+                /(\d+(?:\.\d+)?)%/g,
+                "($1/100)"
+            );
+
+
+        /*
+           Safe calculator evaluation
+
+           Only mathematical characters,
+           Math.PI and Math.E are allowed.
+        */
+
+        if (
+            !/^[0-9+\-*/().\sA-Za-z_]*$/.test(
+                expression
+            )
+        ) {
+
+            throw new Error(
+                "Invalid expression"
+            );
+
+        }
+
+
+        let result =
+            Function(
+                "Math",
+                '"use strict"; return (' +
+                expression +
+                ");"
+            )(
+                Math
+            );
+
+
+        if (
+            typeof result !== "number" ||
+            !Number.isFinite(
+                result
+            )
+        ) {
+
+            throw new Error(
+                "Invalid result"
+            );
+
+        }
+
+
         display.value =
-            eval(display.value);
+            formatCalculatorResult(
+                result
+            );
 
     }
 
-    catch {
+    catch (
+        error
+    ) {
 
-        display.value = "Error";
+        display.value =
+            "Error";
 
     }
+}
+
+
+/* =====================================================
+   FACTORIAL
+   ===================================================== */
+
+function factorial(
+    n
+) {
+
+    if (
+        n < 0 ||
+        !Number.isInteger(n)
+    ) {
+
+        return NaN;
+
+    }
+
+
+    if (
+        n > 170
+    ) {
+
+        return Infinity;
+
+    }
+
+
+    let result = 1;
+
+
+    for (
+        let i = 2;
+        i <= n;
+        i++
+    ) {
+
+        result *= i;
+
+    }
+
+
+    return result;
+}
+
+
+/* =====================================================
+   ANGLE CONVERSION
+   ===================================================== */
+
+function toRadians(
+    value
+) {
+
+    if (
+        angleMode === "RAD"
+    ) {
+
+        return value;
+
+    }
+
+
+    return (
+        value *
+        Math.PI /
+        180
+    );
+}
+
+
+function fromRadians(
+    value
+) {
+
+    if (
+        angleMode === "RAD"
+    ) {
+
+        return value;
+
+    }
+
+
+    return (
+        value *
+        180 /
+        Math.PI
+    );
+}
+
+
+/* =====================================================
+   CALCULATOR FORMAT
+   ===================================================== */
+
+function formatCalculatorResult(
+    value
+) {
+
+    if (
+        Math.abs(value) < 1e-12
+    ) {
+
+        value = 0;
+
+    }
+
+
+    return Number(
+        value.toPrecision(12)
+    ).toString();
+}
+
+
+/* =====================================================
+   HTML ESCAPE
+   ===================================================== */
+
+function escapeAttribute(
+    value
+) {
+
+    return String(
+        value
+    )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        );
 
 }
