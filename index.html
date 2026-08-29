@@ -1,80 +1,125 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>GATE Mock Test</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>POLYMER GATE | Section 1 Examination</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 </head>
 
 <body>
 
-<div id="introScreen" class="intro-screen">
+<!-- =====================================================
+     START SCREEN
+     ===================================================== -->
 
-    <div class="intro-box">
+<div
+    id="startScreen"
+    class="start-screen"
+>
 
-        <h1>GATE Mock Test</h1>
+    <div class="start-card">
 
-        <h2>Section 1: Chemistry of High Polymers</h2>
+        <div class="exam-logo">
+            POLYMER GATE
+        </div>
+
+        <h1>
+            Chemistry of High Polymers
+        </h1>
+
+        <h2>
+            Section 1 Examination
+        </h2>
 
         <div class="exam-info">
 
-            <p><strong>Total Questions:</strong> 25</p>
-
-            <p><strong>Total Marks:</strong> 35</p>
-
-            <p><strong>Duration:</strong> 1 Hour</p>
-
-        </div>
-
-        <h3>Marking Scheme</h3>
-
-        <ul>
-            <li>Q1–Q10: 1 mark each</li>
-            <li>Q11: 2 marks</li>
-            <li>Q12–Q16: 1 mark each</li>
-            <li>Q17–Q25: 2 marks each</li>
-            <li>MCQ: −1 mark for an incorrect answer</li>
-            <li>MSQ: No negative marking</li>
-            <li>NAT: No negative marking</li>
-            <li>NAT answers should be entered up to 2 decimal places</li>
-        </ul>
-
-        <h3>Instructions</h3>
-
-        <ul>
-            <li>Click <strong>Start Exam</strong> to begin.</li>
-            <li>The timer starts only after clicking Start Exam.</li>
-            <li>Questions will not be visible before the exam starts.</li>
-            <li>Use Previous and Save & Next to navigate.</li>
-            <li>Use Mark for Review when you want to revisit a question.</li>
-            <li>The question palette shows the status of each question.</li>
-            <li>The exam will be submitted automatically when the timer reaches zero.</li>
-            <li>Once submitted, the exam cannot be restarted.</li>
-        </ul>
-
-        <div class="color-guide">
-
-            <h3>Question Palette</h3>
-
-            <div>
-                <span class="legend grey"></span>
-                Not Answered
+            <div class="info-box">
+                <span>Questions</span>
+                <strong>25</strong>
             </div>
 
-            <div>
-                <span class="legend green"></span>
-                Answered
+            <div class="info-box">
+                <span>Maximum Marks</span>
+                <strong>35</strong>
             </div>
 
-            <div>
-                <span class="legend purple"></span>
-                Marked for Review
+            <div class="info-box">
+                <span>Duration</span>
+                <strong>1 Hour</strong>
             </div>
 
         </div>
 
-        <button id="startExamBtn" onclick="startExam()">
-            Start Exam
+        <div class="instructions">
+
+            <h3>Instructions</h3>
+
+            <ul>
+                <li>
+                    The examination consists of 25 questions.
+                </li>
+
+                <li>
+                    Total examination duration is 1 hour.
+                </li>
+
+                <li>
+                    Questions 1–10 carry 1 mark each.
+                </li>
+
+                <li>
+                    Question 11 carries 2 marks.
+                </li>
+
+                <li>
+                    Questions 12–16 carry 1 mark each.
+                </li>
+
+                <li>
+                    Questions 17–25 carry 2 marks each.
+                </li>
+
+                <li>
+                    MCQ questions carry negative marking for incorrect answers.
+                </li>
+
+                <li>
+                    MSQ and NAT questions do not carry negative marking.
+                </li>
+
+                <li>
+                    NAT answers are evaluated with the tolerance specified in
+                    <code>questions.js</code>.
+                </li>
+
+                <li>
+                    An on-screen scientific calculator is available during
+                    the examination.
+                </li>
+
+                <li>
+                    Once the examination is submitted, it cannot be resumed.
+                </li>
+            </ul>
+
+        </div>
+
+        <button
+            class="start-button"
+            onclick="startExam()"
+        >
+            START EXAM
         </button>
 
     </div>
@@ -82,62 +127,235 @@
 </div>
 
 
-<div id="examScreen" style="display:none;">
+<!-- =====================================================
+     EXAM AREA
+     ===================================================== -->
 
-    <div class="header">
+<div
+    id="examArea"
+    class="exam-area"
+    style="display:none;"
+>
 
-        <h2>GATE Mock Test</h2>
+    <!-- HEADER -->
 
-        <div class="timer-container">
-            Time Left:
-            <span id="timer">60:00</span>
-        </div>
+    <header class="exam-header">
 
-    </div>
+        <div class="header-left">
 
+            <div class="header-title">
+                POLYMER GATE
+            </div>
 
-    <div class="container">
-
-        <div class="question-area">
-
-            <h3 id="question"></h3>
-
-            <div id="options"></div>
-
-            <div id="natInput"></div>
-
-            <div class="buttons">
-
-                <button onclick="prevQuestion()">Previous</button>
-
-                <button onclick="clearResponse()">Clear</button>
-
-                <button onclick="markReview()">Mark for Review</button>
-
-                <button onclick="saveNext()">Save & Next</button>
-
-                <button onclick="submitExam()">Submit</button>
-
+            <div class="header-subtitle">
+                Chemistry of High Polymers — Section 1
             </div>
 
         </div>
 
 
-        <div class="palette-section">
+        <div class="header-center">
+
+            <div class="question-counter">
+                Question <span id="currentQuestion">1</span>
+                of <span id="totalQuestions">25</span>
+            </div>
+
+        </div>
+
+
+        <div class="header-right">
+
+            <!-- CALCULATOR -->
+            <button
+                id="calculatorButton"
+                class="header-calculator-button"
+                onclick="openCalculator()"
+                disabled
+            >
+                Calculator
+            </button>
+
+            <!-- TIMER -->
+            <div class="timer-box">
+
+                <span class="timer-label">
+                    Time Left
+                </span>
+
+                <span
+                    id="timer"
+                    class="timer"
+                >
+                    60:00
+                </span>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- MAIN EXAM -->
+
+    <main class="exam-main">
+
+        <!-- QUESTION PANEL -->
+
+        <section class="question-panel">
+
+            <div class="question-type">
+                <span id="questionType">
+                    MCQ
+                </span>
+
+                <span id="questionMarks">
+                    1 Mark
+                </span>
+            </div>
+
+
+            <div
+                id="question"
+                class="question-text"
+            >
+            </div>
+
+
+            <div
+                id="options"
+                class="options"
+            >
+            </div>
+
+
+            <!-- NAVIGATION -->
+
+            <div class="navigation">
+
+                <button
+                    class="nav-button secondary"
+                    onclick="prevQuestion()"
+                >
+                    Previous
+                </button>
+
+                <button
+                    class="nav-button review-button"
+                    onclick="markReview()"
+                >
+                    Mark for Review
+                </button>
+
+                <button
+                    class="nav-button clear-button"
+                    onclick="clearResponse()"
+                >
+                    Clear Response
+                </button>
+
+                <button
+                    class="nav-button primary"
+                    onclick="saveNext()"
+                >
+                    Save & Next
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- PALETTE PANEL -->
+
+        <aside class="palette-panel">
 
             <div class="palette-title">
                 Question Palette
             </div>
 
-            <div class="palette" id="palette"></div>
 
-            <div class="calculator-container">
+            <div class="palette-legend">
 
-                <button onclick="openCalculator()">
-                    GATE Calculator
-                </button>
+                <div>
+                    <span class="legend-box not-answered"></span>
+                    Not Answered
+                </div>
+
+                <div>
+                    <span class="legend-box answered"></span>
+                    Answered
+                </div>
+
+                <div>
+                    <span class="legend-box review"></span>
+                    Marked for Review
+                </div>
 
             </div>
+
+
+            <div
+                id="palette"
+                class="palette"
+            >
+            </div>
+
+
+            <button
+                class="submit-exam-button"
+                onclick="submitExam()"
+            >
+                Submit Test
+            </button>
+
+        </aside>
+
+    </main>
+
+</div>
+
+
+<!-- =====================================================
+     SUBMIT CONFIRMATION MODAL
+     ===================================================== -->
+
+<div
+    id="submitModal"
+    class="modal-overlay"
+    style="display:none;"
+>
+
+    <div class="modal-card">
+
+        <h2>
+            Submit Examination?
+        </h2>
+
+        <p>
+            Are you sure you want to submit the examination?
+        </p>
+
+        <p>
+            You will not be able to change your answers after submission.
+        </p>
+
+        <div class="modal-buttons">
+
+            <button
+                class="modal-cancel"
+                onclick="closeSubmitModal()"
+            >
+                Cancel
+            </button>
+
+            <button
+                class="modal-confirm"
+                onclick="confirmSubmit()"
+            >
+                Confirm Submit
+            </button>
 
         </div>
 
@@ -146,39 +364,66 @@
 </div>
 
 
-<div id="calculator" class="calculator">
+<!-- =====================================================
+     CANDIDATE DETAILS MODAL
+     ===================================================== -->
 
-    <div class="calculator-header">
-        GATE Calculator
-        <button onclick="closeCalculator()">X</button>
-    </div>
+<div
+    id="nameModal"
+    class="modal-overlay"
+    style="display:none;"
+>
 
-    <input type="text" id="calcDisplay" readonly>
+    <div class="modal-card candidate-card">
 
-    <div class="calc-buttons">
+        <h2>
+            Candidate Details
+        </h2>
 
-        <button onclick="calcInput('7')">7</button>
-        <button onclick="calcInput('8')">8</button>
-        <button onclick="calcInput('9')">9</button>
-        <button onclick="calcInput('/')">÷</button>
+        <p>
+            Enter your details to complete the submission.
+        </p>
 
-        <button onclick="calcInput('4')">4</button>
-        <button onclick="calcInput('5')">5</button>
-        <button onclick="calcInput('6')">6</button>
-        <button onclick="calcInput('*')">×</button>
 
-        <button onclick="calcInput('1')">1</button>
-        <button onclick="calcInput('2')">2</button>
-        <button onclick="calcInput('3')">3</button>
-        <button onclick="calcInput('-')">−</button>
+        <label
+            for="candidateName"
+            class="input-label"
+        >
+            Name
+        </label>
 
-        <button onclick="calcInput('0')">0</button>
-        <button onclick="calcInput('.')">.</button>
-        <button onclick="calculate()">=</button>
-        <button onclick="calcInput('+')">+</button>
+        <input
+            id="candidateName"
+            type="text"
+            class="candidate-input"
+            placeholder="Enter your full name"
+            autocomplete="name"
+        >
 
-        <button onclick="clearCalculator()" class="clear-calc">
-            C
+
+        <label
+            for="candidateMobile"
+            class="input-label"
+        >
+            Mobile Number
+        </label>
+
+        <input
+            id="candidateMobile"
+            type="tel"
+            class="candidate-input"
+            placeholder="Enter 10-digit mobile number"
+            inputmode="numeric"
+            maxlength="10"
+            autocomplete="tel"
+        >
+
+
+        <button
+            class="modal-confirm full-width"
+            onclick="finalSubmit()"
+        >
+            Submit Examination
         </button>
 
     </div>
@@ -186,7 +431,308 @@
 </div>
 
 
+<!-- =====================================================
+     RESULT MODAL
+     ===================================================== -->
+
+<div
+    id="resultModal"
+    class="modal-overlay"
+    style="display:none;"
+>
+
+    <div class="modal-card result-card">
+
+        <div class="result-heading">
+            Examination Submitted
+        </div>
+
+        <div
+            id="resultName"
+            class="result-name"
+        >
+        </div>
+
+        <div
+            id="resultMobile"
+            class="result-mobile"
+        >
+        </div>
+
+        <div class="result-score-label">
+            Your Score
+        </div>
+
+        <div
+            id="resultScore"
+            class="result-score"
+        >
+        </div>
+
+        <button
+            class="start-button result-button"
+            onclick="closeResultAndReload()"
+        >
+            Close
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     GATE-STYLE CALCULATOR
+     ===================================================== -->
+
+<div
+    id="calculator"
+    class="calculator"
+    style="display:none;"
+>
+
+    <div class="calculator-header">
+
+        <span>
+            Scientific Calculator
+        </span>
+
+        <button
+            onclick="closeCalculator()"
+            class="calculator-close"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <div class="calculator-body">
+
+        <input
+            id="calc-display"
+            class="calc-display"
+            type="text"
+            readonly
+        >
+
+
+        <div class="calculator-mode">
+
+            <button
+                id="angleModeButton"
+                onclick="toggleAngleMode()"
+            >
+                DEG
+            </button>
+
+        </div>
+
+
+        <div class="calculator-grid">
+
+            <!-- Row 1 -->
+
+            <button onclick="calcFunction('sin')">
+                sin
+            </button>
+
+            <button onclick="calcFunction('cos')">
+                cos
+            </button>
+
+            <button onclick="calcFunction('tan')">
+                tan
+            </button>
+
+            <button onclick="calcFunction('log')">
+                log
+            </button>
+
+            <button onclick="calcFunction('ln')">
+                ln
+            </button>
+
+
+            <!-- Row 2 -->
+
+            <button onclick="calcFunction('asin')">
+                sin⁻¹
+            </button>
+
+            <button onclick="calcFunction('acos')">
+                cos⁻¹
+            </button>
+
+            <button onclick="calcFunction('atan')">
+                tan⁻¹
+            </button>
+
+            <button onclick="calcFunction('sqrt')">
+                √
+            </button>
+
+            <button onclick="calcInput('^2')">
+                x²
+            </button>
+
+
+            <!-- Row 3 -->
+
+            <button onclick="calcInput('7')">
+                7
+            </button>
+
+            <button onclick="calcInput('8')">
+                8
+            </button>
+
+            <button onclick="calcInput('9')">
+                9
+            </button>
+
+            <button onclick="calcInput('/')">
+                ÷
+            </button>
+
+            <button onclick="calcInput('^')">
+                xʸ
+            </button>
+
+
+            <!-- Row 4 -->
+
+            <button onclick="calcInput('4')">
+                4
+            </button>
+
+            <button onclick="calcInput('5')">
+                5
+            </button>
+
+            <button onclick="calcInput('6')">
+                6
+            </button>
+
+            <button onclick="calcInput('*')">
+                ×
+            </button>
+
+            <button onclick="calcFunction('inverse')">
+                1/x
+            </button>
+
+
+            <!-- Row 5 -->
+
+            <button onclick="calcInput('1')">
+                1
+            </button>
+
+            <button onclick="calcInput('2')">
+                2
+            </button>
+
+            <button onclick="calcInput('3')">
+                3
+            </button>
+
+            <button onclick="calcInput('-')">
+                −
+            </button>
+
+            <button onclick="calcFunction('factorial')">
+                n!
+            </button>
+
+
+            <!-- Row 6 -->
+
+            <button onclick="calcInput('0')">
+                0
+            </button>
+
+            <button onclick="calcInput('.')">
+                .
+            </button>
+
+            <button onclick="calcInput('(')">
+                (
+            </button>
+
+            <button onclick="calcInput(')')">
+                )
+            </button>
+
+            <button onclick="calcInput('+')">
+                +
+            </button>
+
+
+            <!-- Row 7 -->
+
+            <button onclick="calcInput('Math.PI')">
+                π
+            </button>
+
+            <button onclick="calcInput('Math.E')">
+                e
+            </button>
+
+            <button onclick="calcFunction('abs')">
+                |x|
+            </button>
+
+            <button onclick="calcBackspace()">
+                ←
+            </button>
+
+            <button
+                class="equals-button"
+                onclick="calculateResult()"
+            >
+                =
+            </button>
+
+
+            <!-- Row 8 -->
+
+            <button
+                class="clear-calculator"
+                onclick="calcClear()"
+            >
+                AC
+            </button>
+
+            <button onclick="calcInput('%')">
+                %
+            </button>
+
+            <button onclick="calcFunction('sign')">
+                +/−
+            </button>
+
+            <button onclick="calcFunction('exp')">
+                exp
+            </button>
+
+            <button onclick="calcFunction('squareRoot')">
+                √x
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     SCRIPTS
+     ===================================================== -->
+
 <script src="questions.js"></script>
+
 <script src="script.js"></script>
 
 </body>
