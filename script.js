@@ -1,12 +1,3 @@
-/* =====================================================
-   POLYMER GATE - EXAM SCRIPT
-   ===================================================== */
-
-
-/* =====================================================
-   EXAM VARIABLES
-   ===================================================== */
-
 let current = 0;
 
 let answers =
@@ -17,50 +8,9 @@ let review =
 
 let examEnded = false;
 
-let timerInterval = null;
-
-let angleMode = "DEG";
-
-
-/* =====================================================
-   EXAM TIME
-   ===================================================== */
-
-/*
-   TOTAL EXAM TIME = 1 HOUR
-
-   60 × 60 = 3600 seconds
-*/
+let timerInterval;
 
 const EXAM_TIME = 60 * 60;
-
-
-/* =====================================================
-   PAGE LOAD
-   ===================================================== */
-
-window.addEventListener(
-    "load",
-    function () {
-
-        const totalQuestions =
-            document.getElementById(
-                "totalQuestions"
-            );
-
-        if (totalQuestions) {
-
-            totalQuestions.innerText =
-                questions.length;
-
-        }
-
-        console.log(
-            "POLYMER GATE loaded."
-        );
-
-    }
-);
 
 
 /* =====================================================
@@ -69,92 +19,38 @@ window.addEventListener(
 
 function startExam() {
 
-    clearInterval(
-        timerInterval
-    );
+    clearInterval(timerInterval);
 
     current = 0;
 
     answers =
-        new Array(
-            questions.length
-        ).fill(null);
+        new Array(questions.length).fill(null);
 
     review =
-        new Array(
-            questions.length
-        ).fill(false);
+        new Array(questions.length).fill(false);
 
     examEnded = false;
 
-
-    /*
-       Record start time
-    */
-
-    let startTime =
-        Date.now();
-
     sessionStorage.setItem(
         "gateExamStartTime",
-        startTime
+        Date.now()
     );
-
-
-    /*
-       Hide start screen
-    */
 
     document.getElementById(
         "startScreen"
-    ).style.display =
-        "none";
-
-
-    /*
-       Show exam
-    */
+    ).style.display = "none";
 
     document.getElementById(
         "examArea"
-    ).style.display =
-        "flex";
+    ).style.display = "flex";
 
-
-    /*
-       Enable calculator
-    */
-
-    const calculatorButton =
-        document.getElementById(
-            "calculatorButton"
-        );
-
-    if (calculatorButton) {
-
-        calculatorButton.disabled =
-            false;
-
-    }
-
-
-    /*
-       Load first question
-    */
+    document.getElementById(
+        "calculatorButton"
+    ).disabled = false;
 
     loadQuestion();
 
-
-    /*
-       Create palette
-    */
-
     updatePalette();
-
-
-    /*
-       Start timer
-    */
 
     updateTimer();
 
@@ -163,7 +59,6 @@ function startExam() {
             updateTimer,
             1000
         );
-
 }
 
 
@@ -173,382 +68,170 @@ function startExam() {
 
 function loadQuestion() {
 
-    let q =
-        questions[current];
+    let q = questions[current];
 
+    document.getElementById(
+        "questionType"
+    ).innerText =
+        q.type +
+        " — " +
+        q.marks +
+        " Mark" +
+        (q.marks > 1 ? "s" : "");
 
-    if (!q) {
-
-        console.error(
-            "Question not found:",
-            current
-        );
-
-        return;
-
-    }
-
-
-    /*
-       Question number
-    */
-
-    const currentQuestion =
-        document.getElementById(
-            "currentQuestion"
-        );
-
-    if (currentQuestion) {
-
-        currentQuestion.innerText =
-            current + 1;
-
-    }
-
-
-    /*
-       Question
-    */
 
     document.getElementById(
         "question"
     ).innerText =
-
         "Q" +
         (current + 1) +
-        ". " +
+        ". [" +
+        q.marks +
+        (q.marks === 1 ? " Mark" : " Marks") +
+        "] " +
         q.question;
 
 
-    /*
-       Determine question type
-    */
-
-    let type =
-        getQuestionType(q);
+    let html = "";
 
 
-    const questionType =
-        document.getElementById(
-            "questionType"
-        );
+    /* ============================
+       NAT
+       ============================ */
 
-    if (questionType) {
+    if (q.type === "NAT") {
 
-        questionType.innerText =
-            type;
+        let previous =
+            answers[current];
 
-    }
+        html = `
 
+            <div class="nat-answer">
 
-    /*
-       Determine marks
-    */
-
-    let marks =
-        getQuestionMarks(
-            q,
-            current
-        );
-
-
-    const questionMarks =
-        document.getElementById(
-            "questionMarks"
-        );
-
-    if (questionMarks) {
-
-        questionMarks.innerText =
-            marks +
-            (
-                marks === 1
-                    ? " Mark"
-                    : " Marks"
-            );
-
-    }
-
-
-    /*
-       Load options
-    */
-
-    let optionsContainer =
-        document.getElementById(
-            "options"
-        );
-
-    optionsContainer.innerHTML =
-        "";
-
-
-    /*
-       NAT QUESTION
-    */
-
-    if (
-        type === "NAT" ||
-        type === "NUMERICAL"
-    ) {
-
-        let savedValue =
-            answers[current] === null
-                ? ""
-                : answers[current];
-
-
-        optionsContainer.innerHTML = `
-
-            <div class="nat-input-container">
+                <label>
+                    Enter your answer:
+                </label>
 
                 <input
-                    id="natAnswer"
-                    class="nat-input"
                     type="number"
-                    step="any"
-                    value="${escapeAttribute(savedValue)}"
-                    placeholder="Enter numerical answer"
-                    autocomplete="off"
+                    id="natInput"
+                    step="0.01"
+                    min="0"
+                    placeholder="Enter answer"
+                    value="${
+                        previous !== null
+                        ? previous
+                        : ""
+                    }"
                 >
 
-                <div class="nat-instruction">
-                    Enter your numerical answer.
-                    Answer should be correct to TWO decimal places.
-                </div>
+                <p class="nat-note">
+                    Enter the answer correct to TWO decimal places.
+                </p>
 
             </div>
 
         `;
 
-        return;
-
     }
 
 
-    /*
-       MSQ / MCQ
-    */
+    /* ============================
+       MSQ
+       ============================ */
 
-    let multiple =
-        type === "MSQ" ||
-        type === "MULTIPLE SELECT";
+    else if (q.type === "MSQ") {
 
+        q.options.forEach(
+            function(opt, i) {
 
-    /*
-       Make sure options exist
-    */
-
-    if (!Array.isArray(q.options)) {
-
-        console.error(
-            "Options missing for question:",
-            current + 1
-        );
-
-        return;
-
-    }
-
-
-    q.options.forEach(
-        function (opt, i) {
-
-            let checked = false;
-
-
-            /*
-               MSQ
-            */
-
-            if (multiple) {
-
-                checked =
+                let checked =
                     Array.isArray(
                         answers[current]
                     ) &&
-                    answers[current].includes(
-                        i
-                    );
+                    answers[current].includes(i);
+
+
+                html += `
+
+                    <label>
+
+                        <input
+
+                            type="checkbox"
+
+                            name="option"
+
+                            value="${i}"
+
+                            ${checked ? "checked" : ""}
+
+                        >
+
+                        ${opt}
+
+                    </label>
+
+                `;
 
             }
-
-
-            /*
-               MCQ
-            */
-
-            else {
-
-                checked =
-                    answers[current] === i;
-
-            }
-
-
-            let inputType =
-                multiple
-                    ? "checkbox"
-                    : "radio";
-
-
-            let inputName =
-                multiple
-                    ? "option[]"
-                    : "option";
-
-
-            let label =
-                document.createElement(
-                    "label"
-                );
-
-
-            label.innerHTML = `
-
-                <input
-                    type="${inputType}"
-                    name="${inputName}"
-                    value="${i}"
-                    ${checked ? "checked" : ""}
-                >
-
-                <span>
-                    ${opt}
-                </span>
-
-            `;
-
-
-            optionsContainer.appendChild(
-                label
-            );
-
-        }
-    );
-
-}
-
-
-/* =====================================================
-   QUESTION TYPE
-   ===================================================== */
-
-function getQuestionType(q) {
-
-    let type =
-        q.type ||
-        q.questionType ||
-        q.kind ||
-        "MCQ";
-
-
-    type =
-        String(type)
-            .trim()
-            .toUpperCase();
-
-
-    if (
-        type === "NUM" ||
-        type === "NUMERICAL"
-    ) {
-
-        return "NAT";
-
-    }
-
-
-    return type;
-
-}
-
-
-/* =====================================================
-   QUESTION MARKS
-   ===================================================== */
-
-function getQuestionMarks(
-    q,
-    index
-) {
-
-    /*
-       If questions.js explicitly contains marks,
-       use that value.
-    */
-
-    if (
-        q.marks !== undefined &&
-        q.marks !== null
-    ) {
-
-        return Number(
-            q.marks
         );
 
     }
 
 
-    /*
-       New exam structure:
+    /* ============================
+       MCQ
+       ============================ */
 
-       Q1-Q10  = 1 mark
-       Q11     = 2 marks
-       Q12-Q16 = 1 mark
-       Q17-Q25 = 2 marks
-    */
+    else {
 
-    let number =
-        index + 1;
+        q.options.forEach(
+            function(opt, i) {
 
-
-    if (
-        number >= 1 &&
-        number <= 10
-    ) {
-
-        return 1;
-
-    }
+                let checked =
+                    answers[current] === i;
 
 
-    if (
-        number === 11
-    ) {
+                html += `
 
-        return 2;
+                    <label>
 
-    }
+                        <input
 
+                            type="radio"
 
-    if (
-        number >= 12 &&
-        number <= 16
-    ) {
+                            name="option"
 
-        return 1;
+                            value="${i}"
 
-    }
+                            ${checked ? "checked" : ""}
 
+                        >
 
-    if (
-        number >= 17 &&
-        number <= 25
-    ) {
+                        ${opt}
 
-        return 2;
+                    </label>
+
+                `;
+
+            }
+        );
 
     }
 
 
-    return 1;
+    document.getElementById(
+        "options"
+    ).innerHTML = html;
 
+
+    updatePalette();
 }
 
 
 /* =====================================================
-   SAVE CURRENT ANSWER
+   SAVE ANSWER
    ===================================================== */
 
 function saveCurrentAnswer() {
@@ -557,55 +240,24 @@ function saveCurrentAnswer() {
         questions[current];
 
 
-    let type =
-        getQuestionType(q);
-
-
-    /*
+    /* ============================
        NAT
-    */
+       ============================ */
 
-    if (
-        type === "NAT" ||
-        type === "NUMERICAL"
-    ) {
+    if (q.type === "NAT") {
 
         let input =
             document.getElementById(
-                "natAnswer"
+                "natInput"
             );
 
 
-        if (!input) {
-
-            return false;
-
-        }
-
-
-        let value =
-            input.value.trim();
-
-
-        if (value === "") {
-
-            answers[current] =
-                null;
-
-            return false;
-
-        }
-
-
-        let number =
-            Number(value);
-
-
         if (
-            !Number.isFinite(
-                number
-            )
+            !input ||
+            input.value.trim() === ""
         ) {
+
+            answers[current] = null;
 
             return false;
 
@@ -613,7 +265,9 @@ function saveCurrentAnswer() {
 
 
         answers[current] =
-            number;
+            parseFloat(
+                input.value
+            );
 
 
         return true;
@@ -621,78 +275,82 @@ function saveCurrentAnswer() {
     }
 
 
-    /*
-       MSQ
-    */
+    /* ============================
+       MCQ
+       ============================ */
 
-    if (
-        type === "MSQ" ||
-        type === "MULTIPLE SELECT"
-    ) {
+    if (q.type === "MCQ") {
 
         let selected =
-            document.querySelectorAll(
-                'input[name="option[]"]:checked'
+            document.querySelector(
+                'input[name="option"]:checked'
             );
 
 
-        let values =
-            Array.from(
-                selected
-            ).map(
-                function (el) {
+        if (!selected) {
 
-                    return Number(
-                        el.value
-                    );
-
-                }
-            );
-
-
-        if (
-            values.length === 0
-        ) {
-
-            answers[current] =
-                null;
+            answers[current] = null;
 
             return false;
 
         }
 
-
-        answers[current] =
-            values.sort(
-                function (a, b) {
-
-                    return a - b;
-
-                }
-            );
-
-
-        return true;
-
-    }
-
-
-    /*
-       MCQ
-    */
-
-    let selected =
-        document.querySelector(
-            'input[name="option"]:checked'
-        );
-
-
-    if (selected) {
 
         answers[current] =
             parseInt(
                 selected.value
             );
+
+
+        return true;
+
+    }
+
+
+    /* ============================
+       MSQ
+       ============================ */
+
+    if (q.type === "MSQ") {
+
+        let selected =
+            document.querySelectorAll(
+                'input[name="option"]:checked'
+            );
+
+
+        let selectedAnswers = [];
+
+
+        selected.forEach(
+            function(item) {
+
+                selectedAnswers.push(
+                    parseInt(
+                        item.value
+                    )
+                );
+
+            }
+        );
+
+
+        if (
+            selectedAnswers.length === 0
+        ) {
+
+            answers[current] = null;
+
+            return false;
+
+        }
+
+
+        answers[current] =
+            selectedAnswers.sort(
+                (a, b) => a - b
+            );
+
 
         return true;
 
@@ -700,7 +358,6 @@ function saveCurrentAnswer() {
 
 
     return false;
-
 }
 
 
@@ -716,8 +373,7 @@ function saveNext() {
 
     if (answered) {
 
-        review[current] =
-            false;
+        review[current] = false;
 
     }
 
@@ -731,12 +387,6 @@ function saveNext() {
     ) {
 
         current++;
-
-        loadQuestion();
-
-    }
-
-    else {
 
         loadQuestion();
 
@@ -757,8 +407,7 @@ function prevQuestion() {
 
     if (answered) {
 
-        review[current] =
-            false;
+        review[current] = false;
 
     }
 
@@ -766,9 +415,7 @@ function prevQuestion() {
     updatePalette();
 
 
-    if (
-        current > 0
-    ) {
+    if (current > 0) {
 
         current--;
 
@@ -780,21 +427,16 @@ function prevQuestion() {
 
 
 /* =====================================================
-   CLEAR RESPONSE
+   CLEAR
    ===================================================== */
 
 function clearResponse() {
 
-    answers[current] =
-        null;
+    answers[current] = null;
 
-    review[current] =
-        false;
-
+    review[current] = false;
 
     loadQuestion();
-
-    updatePalette();
 
 }
 
@@ -807,8 +449,7 @@ function markReview() {
 
     saveCurrentAnswer();
 
-    review[current] =
-        true;
+    review[current] = true;
 
     updatePalette();
 
@@ -816,7 +457,7 @@ function markReview() {
 
 
 /* =====================================================
-   QUESTION PALETTE
+   PALETTE
    ===================================================== */
 
 function updatePalette() {
@@ -827,15 +468,7 @@ function updatePalette() {
         );
 
 
-    if (!palette) {
-
-        return;
-
-    }
-
-
-    palette.innerHTML =
-        "";
+    palette.innerHTML = "";
 
 
     for (
@@ -848,23 +481,12 @@ function updatePalette() {
             "not-answered";
 
 
-        /*
-           Review takes priority
-        */
-
-        if (
-            review[i]
-        ) {
+        if (review[i]) {
 
             colorClass =
                 "review";
 
         }
-
-
-        /*
-           Answered
-        */
 
         else if (
             answers[i] !== null
@@ -879,10 +501,13 @@ function updatePalette() {
         palette.innerHTML += `
 
             <button
+
                 class="${colorClass}"
-                onclick="jump(${i})"
-            >
+
+                onclick="jump(${i})">
+
                 ${i + 1}
+
             </button>
 
         `;
@@ -893,7 +518,7 @@ function updatePalette() {
 
 
 /* =====================================================
-   JUMP TO QUESTION
+   JUMP
    ===================================================== */
 
 function jump(i) {
@@ -904,18 +529,12 @@ function jump(i) {
 
     if (answered) {
 
-        review[current] =
-            false;
+        review[current] = false;
 
     }
 
 
-    updatePalette();
-
-
-    current =
-        i;
-
+    current = i;
 
     loadQuestion();
 
@@ -964,13 +583,7 @@ function updateTimer() {
         elapsed;
 
 
-    /*
-       TIME OVER
-    */
-
-    if (
-        remaining <= 0
-    ) {
+    if (remaining <= 0) {
 
         document.getElementById(
             "timer"
@@ -983,26 +596,10 @@ function updateTimer() {
         );
 
 
-        examEnded =
-            true;
+        examEnded = true;
 
 
-        /*
-           Save current answer
-        */
-
-        saveCurrentAnswer();
-
-
-        /*
-           Automatically request
-           candidate details
-        */
-
-        openNameModal(
-            true
-        );
-
+        openNameModal(true);
 
         return;
 
@@ -1023,41 +620,16 @@ function updateTimer() {
         "timer"
     ).innerText =
 
-        String(minutes)
-            .padStart(
-                2,
-                "0"
-            )
-
-        +
-
-        ":"
-
-        +
-
-        String(seconds)
-            .padStart(
-                2,
-                "0"
-            );
+        String(minutes).padStart(2, "0") +
+        ":" +
+        String(seconds).padStart(2, "0");
 
 
-    /*
-       Last 5 minutes
-    */
+    if (remaining <= 300) {
 
-    let timerBox =
         document.querySelector(
             ".timer-box"
-        );
-
-
-    if (
-        timerBox &&
-        remaining <= 300
-    ) {
-
-        timerBox.classList.add(
+        ).classList.add(
             "timer-warning"
         );
 
@@ -1067,7 +639,7 @@ function updateTimer() {
 
 
 /* =====================================================
-   SUBMIT BUTTON
+   SUBMIT
    ===================================================== */
 
 function submitExam() {
@@ -1075,7 +647,6 @@ function submitExam() {
     saveCurrentAnswer();
 
     updatePalette();
-
 
     document.getElementById(
         "submitModal"
@@ -1085,18 +656,7 @@ function submitExam() {
 }
 
 
-/* =====================================================
-   CLOSE SUBMIT MODAL
-   ===================================================== */
-
 function closeSubmitModal() {
-
-    if (examEnded) {
-
-        return;
-
-    }
-
 
     document.getElementById(
         "submitModal"
@@ -1106,78 +666,32 @@ function closeSubmitModal() {
 }
 
 
-/* =====================================================
-   CONFIRM SUBMISSION
-   ===================================================== */
-
 function confirmSubmit() {
 
     closeSubmitModal();
 
+    examEnded = true;
 
-    saveCurrentAnswer();
+    clearInterval(timerInterval);
 
-
-    examEnded =
-        true;
-
-
-    clearInterval(
-        timerInterval
-    );
-
-
-    openNameModal(
-        false
-    );
+    openNameModal(false);
 
 }
 
 
 /* =====================================================
-   CANDIDATE DETAILS
+   NAME
    ===================================================== */
 
-function openNameModal(
-    autoSubmit
-) {
-
-    if (autoSubmit) {
-
-        examEnded =
-            true;
-
-
-        clearInterval(
-            timerInterval
-        );
-
-    }
-
+function openNameModal(autoSubmit) {
 
     saveCurrentAnswer();
 
     updatePalette();
 
-
     document.getElementById(
         "candidateName"
-    ).value =
-        "";
-
-
-    const mobileInput =
-        document.getElementById(
-            "candidateMobile"
-        );
-
-    if (mobileInput) {
-
-        mobileInput.value =
-            "";
-
-    }
-
+    ).value = "";
 
     document.getElementById(
         "nameModal"
@@ -1186,7 +700,7 @@ function openNameModal(
 
 
     setTimeout(
-        function () {
+        () => {
 
             document.getElementById(
                 "candidateName"
@@ -1196,6 +710,206 @@ function openNameModal(
         100
     );
 
+}
+
+
+function closeNameModal() {
+
+    if (examEnded) {
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "nameModal"
+    ).style.display =
+        "none";
+
+}
+
+
+/* =====================================================
+   SCORE
+   ===================================================== */
+
+function calculateScore() {
+
+    let score = 0;
+
+
+    for (
+        let i = 0;
+        i < questions.length;
+        i++
+    ) {
+
+        let q =
+            questions[i];
+
+
+        /* ============================
+           NAT
+           ============================ */
+
+        if (q.type === "NAT") {
+
+            if (
+                answers[i] === null
+            ) {
+
+                continue;
+
+            }
+
+
+            /*
+               Allow answer within
+               0.01 tolerance.
+            */
+
+            if (
+                Math.abs(
+                    answers[i] -
+                    q.answer
+                ) <= 0.01
+            ) {
+
+                score += q.marks;
+
+            }
+
+            continue;
+
+        }
+
+
+        /* ============================
+           MSQ
+           ============================ */
+
+        if (q.type === "MSQ") {
+
+            if (
+                !Array.isArray(
+                    answers[i]
+                )
+            ) {
+
+                continue;
+
+            }
+
+
+            let student =
+                answers[i]
+                    .slice()
+                    .sort(
+                        (a,b) => a-b
+                    );
+
+
+            let correct =
+                q.correctAnswers
+                    .slice()
+                    .sort(
+                        (a,b) => a-b
+                    );
+
+
+            let isCorrect =
+                student.length ===
+                correct.length;
+
+
+            if (isCorrect) {
+
+                for (
+                    let j = 0;
+                    j < correct.length;
+                    j++
+                ) {
+
+                    if (
+                        student[j] !==
+                        correct[j]
+                    ) {
+
+                        isCorrect = false;
+
+                        break;
+
+                    }
+
+                }
+
+            }
+
+
+            /*
+               MSQ:
+               Correct = +marks
+               Wrong = 0
+            */
+
+            if (isCorrect) {
+
+                score += q.marks;
+
+            }
+
+            continue;
+
+        }
+
+
+        /* ============================
+           MCQ
+           ============================ */
+
+        if (q.type === "MCQ") {
+
+            if (
+                answers[i] === null
+            ) {
+
+                continue;
+
+            }
+
+
+            if (
+                answers[i] ===
+                q.answer
+            ) {
+
+                score += q.marks;
+
+            }
+
+            else {
+
+                /*
+                   Wrong MCQ:
+                   1-mark MCQ = -1/3
+                   2-mark MCQ = -2/3
+                */
+
+                score -= q.marks / 3;
+
+            }
+
+        }
+
+    }
+
+
+    if (score < 0) {
+        score = 0;
+    }
+
+    return Number(score.toFixed(2));
 }
 
 
@@ -1211,101 +925,32 @@ function finalSubmit() {
         ).value.trim();
 
 
-    let mobileElement =
+    let mobile =
         document.getElementById(
             "candidateMobile"
-        );
+        ).value.trim();
 
+    if (!name) {
 
-    let mobile =
-        mobileElement
-            ? mobileElement.value.trim()
-            : "";
-
-
-    /*
-       Validate name
-    */
-
-    if (
-        name === ""
-    ) {
-
-        alert(
-            "Please enter your name."
-        );
-
-
-        document.getElementById(
-            "candidateName"
-        ).focus();
-
-
+        alert("Please enter your name.");
         return;
 
     }
 
+    if (!/^[0-9]{10}$/.test(mobile)) {
 
-    /*
-       Validate mobile
-    */
-
-    if (
-        !/^[0-9]{10}$/.test(
-            mobile
-        )
-    ) {
-
-        alert(
-            "Please enter a valid 10-digit mobile number."
-        );
-
-
-        if (mobileElement) {
-
-            mobileElement.focus();
-
-        }
-
-
+        alert("Please enter a valid 10-digit mobile number.");
         return;
 
     }
 
-
-    /*
-       Save current answer one final time
-    */
-
-    saveCurrentAnswer();
-
-
-    /*
-       Calculate score
-    */
 
     let score =
         calculateScore();
 
 
-    /*
-       Google Apps Script URL
-
-       IMPORTANT:
-       Replace this with your deployed
-       Sheet2 Apps Script Web App URL.
-    */
-
-    const SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycbw_AyF_eyKtsgT-ufYemQjAa6QxhOzzySsmJCY45fxeBZtT2xc0O-ARRlpdv2PQVX7Piw/exec";
-
-
-    /*
-       Build URL
-    */
-
     let url =
-        SCRIPT_URL;
+        "https://script.google.com/macros/s/AKfycbyp-6oaHho0YJ_dh_m7S189TUghfzsTs_3YvRxkchmsCzuCfUPOjlK7CtzgXqGSM71d/exec";
 
 
     url +=
@@ -1314,7 +959,6 @@ function finalSubmit() {
             name
         );
 
-
     url +=
         "&mobile=" +
         encodeURIComponent(
@@ -1322,41 +966,36 @@ function finalSubmit() {
         );
 
 
-    /*
-       Send all answers
-    */
-
     for (
         let i = 0;
         i < questions.length;
         i++
     ) {
 
-        let answer =
-            answers[i];
+        let answer = "";
 
 
         if (
-            Array.isArray(
-                answer
-            )
+            answers[i] !== null
         ) {
 
-            answer =
-                answer.join(
-                    ","
-                );
+            if (
+                Array.isArray(
+                    answers[i]
+                )
+            ) {
 
-        }
+                answer =
+                    answers[i].join(",");
 
+            }
 
-        if (
-            answer === null ||
-            answer === undefined
-        ) {
+            else {
 
-            answer =
-                "";
+                answer =
+                    answers[i];
+
+            }
 
         }
 
@@ -1372,10 +1011,6 @@ function finalSubmit() {
     }
 
 
-    /*
-       Score
-    */
-
     url +=
         "&score=" +
         encodeURIComponent(
@@ -1384,18 +1019,8 @@ function finalSubmit() {
 
 
     /*
-       Total marks
-    */
-
-    url +=
-        "&totalMarks=" +
-        encodeURIComponent(
-            getTotalMarks()
-        );
-
-
-    /*
-       Send silently through iframe
+       Send to Google Sheets
+       without opening another page.
     */
 
     let iframe =
@@ -1417,601 +1042,33 @@ function finalSubmit() {
     );
 
 
-    /*
-       Hide candidate modal
-    */
-
     document.getElementById(
         "nameModal"
     ).style.display =
         "none";
 
 
-    /*
-       Show result
-    */
-
     document.getElementById(
         "resultName"
     ).innerText =
-        "Candidate: " +
-        name;
-
-
-    const resultMobile =
-        document.getElementById(
-            "resultMobile"
-        );
-
-    if (resultMobile) {
-
-        resultMobile.innerText =
-            "Mobile: " +
-            mobile;
-
-    }
+        "Candidate: " + name +
+        " | Mobile: " + mobile;
 
 
     document.getElementById(
         "resultScore"
     ).innerText =
-        score +
-        " / " +
-        getTotalMarks();
+        score + " / 35";
 
 
-    setTimeout(
-        function () {
-
-            document.getElementById(
-                "resultModal"
-            ).style.display =
-                "flex";
-
-        },
-        800
-    );
+    document.getElementById(
+        "resultModal"
+    ).style.display =
+        "flex";
 
 
     sessionStorage.removeItem(
         "gateExamStartTime"
-    );
-
-}
-
-
-/* =====================================================
-   SCORE CALCULATION
-   ===================================================== */
-
-function calculateScore() {
-
-    let score =
-        0;
-
-
-    for (
-        let i = 0;
-        i < questions.length;
-        i++
-    ) {
-
-        let q =
-            questions[i];
-
-
-        let type =
-            getQuestionType(q);
-
-
-        let marks =
-            getQuestionMarks(
-                q,
-                i
-            );
-
-
-        let studentAnswer =
-            answers[i];
-
-
-        /*
-           Unanswered
-        */
-
-        if (
-            studentAnswer === null ||
-            studentAnswer === undefined
-        ) {
-
-            continue;
-
-        }
-
-
-        /*
-           NAT
-
-           NAT has NO negative marking.
-        */
-
-        if (
-            type === "NAT" ||
-            type === "NUMERICAL"
-        ) {
-
-            if (
-                checkNAT(
-                    q,
-                    studentAnswer
-                )
-            ) {
-
-                score +=
-                    marks;
-
-            }
-
-
-            continue;
-
-        }
-
-
-        /*
-           MSQ
-
-           MSQ has NO negative marking.
-        */
-
-        if (
-            type === "MSQ" ||
-            type === "MULTIPLE SELECT"
-        ) {
-
-            if (
-                checkMSQ(
-                    q,
-                    studentAnswer
-                )
-            ) {
-
-                score +=
-                    marks;
-
-            }
-
-
-            continue;
-
-        }
-
-
-        /*
-           MCQ
-        */
-
-        if (
-            checkMCQ(
-                q,
-                studentAnswer
-            )
-        ) {
-
-            score +=
-                marks;
-
-        }
-
-        else {
-
-            /*
-               Negative marking for MCQ.
-
-               1-mark MCQ = -1/3
-               2-mark MCQ = -2/3
-
-               If questions.js defines
-               negativeMarks, use that.
-            */
-
-            if (
-                q.negativeMarks !== undefined
-            ) {
-
-                score -=
-                    Number(
-                        q.negativeMarks
-                    );
-
-            }
-
-            else {
-
-                score -=
-                    marks / 3;
-
-            }
-
-        }
-
-    }
-
-
-    /*
-       Prevent negative total
-    */
-
-    if (
-        score < 0
-    ) {
-
-        score =
-            0;
-
-    }
-
-
-    /*
-       Round score
-    */
-
-    return Number(
-        score.toFixed(2)
-    );
-
-}
-
-
-/* =====================================================
-   TOTAL MARKS
-   ===================================================== */
-
-function getTotalMarks() {
-
-    let total =
-        0;
-
-
-    for (
-        let i = 0;
-        i < questions.length;
-        i++
-    ) {
-
-        total +=
-            getQuestionMarks(
-                questions[i],
-                i
-            );
-
-    }
-
-
-    return total;
-
-}
-
-
-/* =====================================================
-   MCQ CHECK
-   ===================================================== */
-
-function checkMCQ(
-    q,
-    studentAnswer
-) {
-
-    let correct =
-        q.answer;
-
-
-    /*
-       If answer is stored as
-       an option index.
-    */
-
-    if (
-        Number.isInteger(
-            correct
-        )
-    ) {
-
-        return (
-            Number(
-                studentAnswer
-            ) ===
-            Number(
-                correct
-            )
-        );
-
-    }
-
-
-    /*
-       If answer is stored as
-       A/B/C/D.
-    */
-
-    if (
-        typeof correct === "string"
-    ) {
-
-        let normalized =
-            correct
-                .trim()
-                .toUpperCase();
-
-
-        if (
-            /^[A-D]$/.test(
-                normalized
-            )
-        ) {
-
-            let correctIndex =
-                normalized.charCodeAt(0)
-                -
-                "A".charCodeAt(0);
-
-
-            return (
-                Number(
-                    studentAnswer
-                ) ===
-                correctIndex
-            );
-
-        }
-
-    }
-
-
-    return (
-        String(
-            studentAnswer
-        ) ===
-        String(
-            correct
-        )
-    );
-
-}
-
-
-/* =====================================================
-   MSQ CHECK
-   ===================================================== */
-
-function checkMSQ(
-    q,
-    studentAnswer
-) {
-
-    /*
-       New questions.js uses
-       correctAnswers for MSQ.
-
-       Also support q.answer for
-       compatibility with older files.
-    */
-
-    let correct =
-        q.correctAnswers !== undefined
-            ? q.correctAnswers
-            : q.answer;
-
-
-    /*
-       Convert correct answer
-       to an array.
-    */
-
-    if (
-        !Array.isArray(
-            correct
-        )
-    ) {
-
-        if (
-            typeof correct === "string"
-        ) {
-
-            correct =
-                correct
-                    .split(",")
-                    .map(
-                        function (x) {
-
-                            return x.trim();
-
-                        }
-                    );
-
-        }
-
-        else {
-
-            correct =
-                [correct];
-
-        }
-
-    }
-
-
-    /*
-       Convert A/B/C/D answers
-       to indices if required.
-    */
-
-    correct =
-        correct.map(
-            function (item) {
-
-                if (
-                    typeof item === "string" &&
-                    /^[A-D]$/i.test(
-                        item.trim()
-                    )
-                ) {
-
-                    return (
-                        item
-                            .trim()
-                            .toUpperCase()
-                            .charCodeAt(0)
-                        -
-                        "A".charCodeAt(0)
-                    );
-
-                }
-
-
-                return Number(
-                    item
-                );
-
-            }
-        );
-
-
-    let student =
-        Array.isArray(
-            studentAnswer
-        )
-            ? studentAnswer
-            : [studentAnswer];
-
-
-    student =
-        student.map(
-            Number
-        );
-
-
-    correct.sort(
-        function (a, b) {
-
-            return a - b;
-
-        }
-    );
-
-
-    student.sort(
-        function (a, b) {
-
-            return a - b;
-
-        }
-    );
-
-
-    return (
-        JSON.stringify(
-            correct
-        ) ===
-        JSON.stringify(
-            student
-        )
-    );
-
-}
-
-
-/* =====================================================
-   NAT CHECK
-   ===================================================== */
-
-function checkNAT(
-    q,
-    studentAnswer
-) {
-
-    let correct =
-        Number(
-            q.answer
-        );
-
-
-    let student =
-        Number(
-            studentAnswer
-        );
-
-
-    if (
-        !Number.isFinite(
-            correct
-        ) ||
-        !Number.isFinite(
-            student
-        )
-    ) {
-
-        return false;
-
-    }
-
-
-    /*
-       Use tolerance if supplied.
-
-       Supported fields:
-
-       q.tolerance
-       q.tol
-    */
-
-    if (
-        q.tolerance !== undefined
-    ) {
-
-        return (
-            Math.abs(
-                student -
-                correct
-            ) <=
-            Number(
-                q.tolerance
-            )
-        );
-
-    }
-
-
-    if (
-        q.tol !== undefined
-    ) {
-
-        return (
-            Math.abs(
-                student -
-                correct
-            ) <=
-            Number(
-                q.tol
-            )
-        );
-
-    }
-
-
-    /*
-       No tolerance specified.
-
-       Compare to TWO decimal places.
-    */
-
-    return (
-        Number(
-            student.toFixed(2)
-        ) ===
-        Number(
-            correct.toFixed(2)
-        )
     );
 
 }
@@ -2052,18 +1109,11 @@ function closeCalculator() {
 }
 
 
-function calcInput(
-    value
-) {
+function calcInput(value) {
 
-    let display =
-        document.getElementById(
-            "calc-display"
-        );
-
-
-    display.value +=
-        value;
+    document.getElementById(
+        "calc-display"
+    ).value += value;
 
 }
 
@@ -2072,8 +1122,7 @@ function calcClear() {
 
     document.getElementById(
         "calc-display"
-    ).value =
-        "";
+    ).value = "";
 
 }
 
@@ -2095,270 +1144,6 @@ function calcBackspace() {
 }
 
 
-/* =====================================================
-   CALCULATOR ANGLE MODE
-   ===================================================== */
-
-function toggleAngleMode() {
-
-    if (
-        angleMode === "DEG"
-    ) {
-
-        angleMode =
-            "RAD";
-
-    }
-
-    else {
-
-        angleMode =
-            "DEG";
-
-    }
-
-
-    const button =
-        document.getElementById(
-            "angleModeButton"
-        );
-
-
-    if (button) {
-
-        button.innerText =
-            angleMode;
-
-    }
-
-}
-
-
-/* =====================================================
-   CALCULATOR FUNCTIONS
-   ===================================================== */
-
-function calcFunction(
-    operation
-) {
-
-    let display =
-        document.getElementById(
-            "calc-display"
-        );
-
-
-    let value =
-        Number(
-            display.value
-        );
-
-
-    if (
-        !Number.isFinite(
-            value
-        )
-    ) {
-
-        display.value =
-            "Error";
-
-        return;
-
-    }
-
-
-    let result;
-
-
-    switch (
-        operation
-    ) {
-
-        case "sin":
-
-            result =
-                Math.sin(
-                    toRadians(
-                        value
-                    )
-                );
-
-            break;
-
-
-        case "cos":
-
-            result =
-                Math.cos(
-                    toRadians(
-                        value
-                    )
-                );
-
-            break;
-
-
-        case "tan":
-
-            result =
-                Math.tan(
-                    toRadians(
-                        value
-                    )
-                );
-
-            break;
-
-
-        case "asin":
-
-            result =
-                fromRadians(
-                    Math.asin(
-                        value
-                    )
-                );
-
-            break;
-
-
-        case "acos":
-
-            result =
-                fromRadians(
-                    Math.acos(
-                        value
-                    )
-                );
-
-            break;
-
-
-        case "atan":
-
-            result =
-                fromRadians(
-                    Math.atan(
-                        value
-                    )
-                );
-
-            break;
-
-
-        case "log":
-
-            result =
-                Math.log10(
-                    value
-                );
-
-            break;
-
-
-        case "ln":
-
-            result =
-                Math.log(
-                    value
-                );
-
-            break;
-
-
-        case "sqrt":
-
-        case "squareRoot":
-
-            result =
-                Math.sqrt(
-                    value
-                );
-
-            break;
-
-
-        case "inverse":
-
-            result =
-                1 / value;
-
-            break;
-
-
-        case "abs":
-
-            result =
-                Math.abs(
-                    value
-                );
-
-            break;
-
-
-        case "sign":
-
-            result =
-                -value;
-
-            break;
-
-
-        case "exp":
-
-            result =
-                Math.exp(
-                    value
-                );
-
-            break;
-
-
-        case "factorial":
-
-            result =
-                factorial(
-                    value
-                );
-
-            break;
-
-
-        default:
-
-            return;
-
-    }
-
-
-    if (
-        Number.isFinite(
-            result
-        )
-    ) {
-
-        display.value =
-            formatCalculatorResult(
-                result
-            );
-
-    }
-
-    else {
-
-        display.value =
-            "Error";
-
-    }
-
-}
-
-
-/* =====================================================
-   CALCULATOR EVALUATION
-   ===================================================== */
-
 function calculateResult() {
 
     let display =
@@ -2371,20 +1156,7 @@ function calculateResult() {
         display.value;
 
 
-    if (
-        expression.trim() === ""
-    ) {
-
-        return;
-
-    }
-
-
     try {
-
-        /*
-           Power operator
-        */
 
         expression =
             expression.replace(
@@ -2393,234 +1165,30 @@ function calculateResult() {
             );
 
 
-        /*
-           Percentage
-
-           50% → (50/100)
-        */
-
         expression =
             expression.replace(
-                /(\d+(?:\.\d+)?)%/g,
-                "($1/100)"
+                /sqrt\(/g,
+                "Math.sqrt("
             );
-
-
-        /*
-           Safe calculator evaluation
-
-           Only mathematical characters,
-           Math.PI and Math.E are allowed.
-        */
-
-        if (
-            !/^[0-9+\-*/().\sA-Za-z_]*$/.test(
-                expression
-            )
-        ) {
-
-            throw new Error(
-                "Invalid expression"
-            );
-
-        }
 
 
         let result =
             Function(
-                "Math",
-                '"use strict"; return (' +
-                expression +
-                ");"
-            )(
-                Math
-            );
-
-
-        if (
-            typeof result !== "number" ||
-            !Number.isFinite(
-                result
-            )
-        ) {
-
-            throw new Error(
-                "Invalid result"
-            );
-
-        }
+                "return " +
+                expression
+            )();
 
 
         display.value =
-            formatCalculatorResult(
-                result
-            );
+            result;
 
     }
 
-    catch (
-        error
-    ) {
+    catch (error) {
 
         display.value =
             "Error";
 
     }
-
-}
-
-
-/* =====================================================
-   FACTORIAL
-   ===================================================== */
-
-function factorial(
-    n
-) {
-
-    if (
-        n < 0 ||
-        !Number.isInteger(
-            n
-        )
-    ) {
-
-        return NaN;
-
-    }
-
-
-    if (
-        n > 170
-    ) {
-
-        return Infinity;
-
-    }
-
-
-    let result =
-        1;
-
-
-    for (
-        let i = 2;
-        i <= n;
-        i++
-    ) {
-
-        result *=
-            i;
-
-    }
-
-
-    return result;
-
-}
-
-
-/* =====================================================
-   ANGLE CONVERSION
-   ===================================================== */
-
-function toRadians(
-    value
-) {
-
-    if (
-        angleMode === "RAD"
-    ) {
-
-        return value;
-
-    }
-
-
-    return (
-        value *
-        Math.PI /
-        180
-    );
-
-}
-
-
-function fromRadians(
-    value
-) {
-
-    if (
-        angleMode === "RAD"
-    ) {
-
-        return value;
-
-    }
-
-
-    return (
-        value *
-        180 /
-        Math.PI
-    );
-
-}
-
-
-/* =====================================================
-   CALCULATOR FORMAT
-   ===================================================== */
-
-function formatCalculatorResult(
-    value
-) {
-
-    if (
-        Math.abs(value) < 1e-12
-    ) {
-
-        value =
-            0;
-
-    }
-
-
-    return Number(
-        value.toPrecision(
-            12
-        )
-    ).toString();
-
-}
-
-
-/* =====================================================
-   HTML ESCAPE
-   ===================================================== */
-
-function escapeAttribute(
-    value
-) {
-
-    return String(
-        value
-    )
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        );
 
 }
