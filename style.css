@@ -1,825 +1,60 @@
 /* =====================================================
-   POLYMER GATE - EXAM SCRIPT
+   GENERAL
    ===================================================== */
 
+body {
 
-/* =====================================================
-   EXAM VARIABLES
-   ===================================================== */
+    font-family: Arial, sans-serif;
 
-let current = 0;
+    margin: 0;
 
-let answers =
-    new Array(questions.length).fill(null);
+    background: white;
 
-let review =
-    new Array(questions.length).fill(false);
-
-let examEnded = false;
-
-let timerInterval = null;
-
-let angleMode = "DEG";
-
-
-/* =====================================================
-   EXAM TIME
-   ===================================================== */
-
-/*
-   TOTAL EXAM TIME = 1 HOUR
-
-   60 × 60 = 3600 seconds
-*/
-
-const EXAM_TIME = 60 * 60;
-
-
-/* =====================================================
-   PAGE LOAD
-   ===================================================== */
-
-window.addEventListener(
-    "load",
-    function () {
-
-        document.getElementById(
-            "totalQuestions"
-        ).innerText = questions.length;
-
-        console.log(
-            "POLYMER GATE loaded."
-        );
-
-    }
-);
-
-
-/* =====================================================
-   START EXAM
-   ===================================================== */
-
-function startExam() {
-
-    clearInterval(timerInterval);
-
-    current = 0;
-
-    answers =
-        new Array(
-            questions.length
-        ).fill(null);
-
-    review =
-        new Array(
-            questions.length
-        ).fill(false);
-
-    examEnded = false;
-
-
-    /*
-       Record start time
-    */
-
-    let startTime =
-        Date.now();
-
-    sessionStorage.setItem(
-        "gateExamStartTime",
-        startTime
-    );
-
-
-    /*
-       Hide start screen
-    */
-
-    document.getElementById(
-        "startScreen"
-    ).style.display = "none";
-
-
-    /*
-       Show exam
-    */
-
-    document.getElementById(
-        "examArea"
-    ).style.display = "flex";
-
-
-    /*
-       Enable calculator
-    */
-
-    document.getElementById(
-        "calculatorButton"
-    ).disabled = false;
-
-
-    /*
-       Load first question
-    */
-
-    loadQuestion();
-
-
-    /*
-       Create palette
-    */
-
-    updatePalette();
-
-
-    /*
-       Start timer
-    */
-
-    updateTimer();
-
-    timerInterval =
-        setInterval(
-            updateTimer,
-            1000
-        );
 }
 
 
 /* =====================================================
-   LOAD QUESTION
+   HEADER
    ===================================================== */
 
-function loadQuestion() {
+.header {
 
-    let q =
-        questions[current];
+    height: 70px;
 
+    background: #1e3a8a;
 
-    if (!q) {
+    color: white;
 
-        console.error(
-            "Question not found:",
-            current
-        );
+    display: flex;
 
-        return;
-    }
+    align-items: center;
 
+    justify-content: space-between;
 
-    /*
-       Question number
-    */
+    padding: 0 30px;
 
-    document.getElementById(
-        "currentQuestion"
-    ).innerText =
-        current + 1;
+    box-sizing: border-box;
 
-
-    /*
-       Question
-    */
-
-    document.getElementById(
-        "question"
-    ).innerText =
-        "Q" +
-        (current + 1) +
-        ". " +
-        q.question;
-
-
-    /*
-       Determine question type
-    */
-
-    let type =
-        getQuestionType(q);
-
-
-    document.getElementById(
-        "questionType"
-    ).innerText =
-        type;
-
-
-    /*
-       Determine marks
-    */
-
-    let marks =
-        getQuestionMarks(
-            q,
-            current
-        );
-
-
-    document.getElementById(
-        "questionMarks"
-    ).innerText =
-        marks +
-        (marks === 1 ? " Mark" : " Marks");
-
-
-    /*
-       Load options
-    */
-
-    let optionsContainer =
-        document.getElementById(
-            "options"
-        );
-
-
-    optionsContainer.innerHTML = "";
-
-
-    /*
-       NAT question
-    */
-
-    if (
-        type === "NAT" ||
-        type === "NUMERICAL"
-    ) {
-
-        let savedValue =
-            answers[current] === null
-                ? ""
-                : answers[current];
-
-        optionsContainer.innerHTML = `
-
-            <div class="nat-input-container">
-
-                <input
-                    id="natAnswer"
-                    class="nat-input"
-                    type="number"
-                    step="any"
-                    value="${escapeAttribute(savedValue)}"
-                    placeholder="Enter numerical answer"
-                    autocomplete="off"
-                >
-
-                <div class="nat-instruction">
-                    Enter your numerical answer.
-                </div>
-
-            </div>
-
-        `;
-
-        return;
-    }
-
-
-    /*
-       MSQ / MCQ
-    */
-
-    let multiple =
-        type === "MSQ" ||
-        type === "MULTIPLE SELECT";
-
-
-    q.options.forEach(
-        function (opt, i) {
-
-            let checked = false;
-
-
-            /*
-               MSQ
-            */
-
-            if (multiple) {
-
-                checked =
-                    Array.isArray(
-                        answers[current]
-                    ) &&
-                    answers[current].includes(i);
-
-            }
-
-
-            /*
-               MCQ
-            */
-
-            else {
-
-                checked =
-                    answers[current] === i;
-
-            }
-
-
-            let inputType =
-                multiple
-                    ? "checkbox"
-                    : "radio";
-
-
-            let inputName =
-                multiple
-                    ? "option[]"
-                    : "option";
-
-
-            let label =
-                document.createElement(
-                    "label"
-                );
-
-
-            label.innerHTML = `
-
-                <input
-                    type="${inputType}"
-                    name="${inputName}"
-                    value="${i}"
-                    ${checked ? "checked" : ""}
-                >
-
-                <span>
-                    ${opt}
-                </span>
-
-            `;
-
-
-            optionsContainer.appendChild(
-                label
-            );
-
-        }
-    );
 }
 
 
-/* =====================================================
-   QUESTION TYPE
-   ===================================================== */
+.header-title {
 
-function getQuestionType(q) {
+    font-size: 24px;
 
-    let type =
-        q.type ||
-        q.questionType ||
-        q.kind ||
-        "MCQ";
+    font-weight: bold;
 
-
-    type =
-        String(type)
-            .trim()
-            .toUpperCase();
-
-
-    if (
-        type === "NUM" ||
-        type === "NUMERICAL"
-    ) {
-
-        return "NAT";
-
-    }
-
-
-    return type;
 }
 
 
-/* =====================================================
-   QUESTION MARKS
-   ===================================================== */
+.header-right {
 
-function getQuestionMarks(q, index) {
+    display: flex;
 
-    /*
-       If questions.js explicitly contains marks,
-       use that value.
-    */
+    align-items: center;
 
-    if (
-        q.marks !== undefined &&
-        q.marks !== null
-    ) {
+    gap: 20px;
 
-        return Number(
-            q.marks
-        );
-
-    }
-
-
-    /*
-       New exam structure:
-
-       Q1-Q10  = 1 mark
-       Q11     = 2 marks
-       Q12-Q16 = 1 mark
-       Q17-Q25 = 2 marks
-    */
-
-    let number =
-        index + 1;
-
-
-    if (
-        number >= 1 &&
-        number <= 10
-    ) {
-
-        return 1;
-
-    }
-
-
-    if (
-        number === 11
-    ) {
-
-        return 2;
-
-    }
-
-
-    if (
-        number >= 12 &&
-        number <= 16
-    ) {
-
-        return 1;
-
-    }
-
-
-    if (
-        number >= 17 &&
-        number <= 25
-    ) {
-
-        return 2;
-
-    }
-
-
-    return 1;
-}
-
-
-/* =====================================================
-   SAVE CURRENT ANSWER
-   ===================================================== */
-
-function saveCurrentAnswer() {
-
-    let q =
-        questions[current];
-
-    let type =
-        getQuestionType(q);
-
-
-    /*
-       NAT
-    */
-
-    if (
-        type === "NAT" ||
-        type === "NUMERICAL"
-    ) {
-
-        let input =
-            document.getElementById(
-                "natAnswer"
-            );
-
-
-        if (!input) {
-
-            return false;
-
-        }
-
-
-        let value =
-            input.value.trim();
-
-
-        if (value === "") {
-
-            answers[current] =
-                null;
-
-            return false;
-
-        }
-
-
-        let number =
-            Number(value);
-
-
-        if (!Number.isFinite(number)) {
-
-            return false;
-
-        }
-
-
-        answers[current] =
-            number;
-
-        return true;
-    }
-
-
-    /*
-       MSQ
-    */
-
-    if (
-        type === "MSQ" ||
-        type === "MULTIPLE SELECT"
-    ) {
-
-        let selected =
-            document.querySelectorAll(
-                'input[name="option[]"]:checked'
-            );
-
-
-        let values =
-            Array.from(
-                selected
-            ).map(
-                function (el) {
-                    return Number(
-                        el.value
-                    );
-                }
-            );
-
-
-        if (
-            values.length === 0
-        ) {
-
-            answers[current] =
-                null;
-
-            return false;
-
-        }
-
-
-        answers[current] =
-            values.sort(
-                function (a, b) {
-                    return a - b;
-                }
-            );
-
-
-        return true;
-    }
-
-
-    /*
-       MCQ
-    */
-
-    let selected =
-        document.querySelector(
-            'input[name="option"]:checked'
-        );
-
-
-    if (selected) {
-
-        answers[current] =
-            parseInt(
-                selected.value
-            );
-
-        return true;
-    }
-
-
-    return false;
-}
-
-
-/* =====================================================
-   SAVE & NEXT
-   ===================================================== */
-
-function saveNext() {
-
-    let answered =
-        saveCurrentAnswer();
-
-
-    if (answered) {
-
-        review[current] =
-            false;
-
-    }
-
-
-    updatePalette();
-
-
-    if (
-        current <
-        questions.length - 1
-    ) {
-
-        current++;
-
-        loadQuestion();
-
-    }
-
-    else {
-
-        loadQuestion();
-
-    }
-}
-
-
-/* =====================================================
-   PREVIOUS
-   ===================================================== */
-
-function prevQuestion() {
-
-    let answered =
-        saveCurrentAnswer();
-
-
-    if (answered) {
-
-        review[current] =
-            false;
-
-    }
-
-
-    updatePalette();
-
-
-    if (current > 0) {
-
-        current--;
-
-        loadQuestion();
-
-    }
-}
-
-
-/* =====================================================
-   CLEAR RESPONSE
-   ===================================================== */
-
-function clearResponse() {
-
-    answers[current] =
-        null;
-
-    review[current] =
-        false;
-
-    loadQuestion();
-
-    updatePalette();
-}
-
-
-/* =====================================================
-   MARK FOR REVIEW
-   ===================================================== */
-
-function markReview() {
-
-    saveCurrentAnswer();
-
-    review[current] =
-        true;
-
-    updatePalette();
-}
-
-
-/* =====================================================
-   QUESTION PALETTE
-   ===================================================== */
-
-function updatePalette() {
-
-    let palette =
-        document.getElementById(
-            "palette"
-        );
-
-
-    if (!palette) {
-
-        return;
-
-    }
-
-
-    palette.innerHTML = "";
-
-
-    for (
-        let i = 0;
-        i < questions.length;
-        i++
-    ) {
-
-        let colorClass =
-            "not-answered";
-
-
-        /*
-           Review takes priority
-        */
-
-        if (
-            review[i]
-        ) {
-
-            colorClass =
-                "review";
-
-        }
-
-
-        /*
-           Answered
-        */
-
-        else if (
-            answers[i] !== null
-        ) {
-
-            colorClass =
-                "answered";
-
-        }
-
-
-        palette.innerHTML += `
-
-            <button
-                class="${colorClass}"
-                onclick="jump(${i})"
-            >
-                ${i + 1}
-            </button>
-
-        `;
-
-    }
-}
-
-
-/* =====================================================
-   JUMP TO QUESTION
-   ===================================================== */
-
-function jump(i) {
-
-    let answered =
-        saveCurrentAnswer();
-
-
-    if (answered) {
-
-        review[current] =
-            false;
-
-    }
-
-
-    updatePalette();
-
-
-    current =
-        i;
-
-
-    loadQuestion();
 }
 
 
@@ -827,1022 +62,618 @@ function jump(i) {
    TIMER
    ===================================================== */
 
-function updateTimer() {
+.timer-box {
 
-    if (examEnded) {
+    background: white;
 
-        return;
+    color: #111;
 
-    }
+    padding: 7px 18px;
 
+    border-radius: 4px;
 
-    let startTime =
-        Number(
-            sessionStorage.getItem(
-                "gateExamStartTime"
-            )
-        );
+    min-width: 100px;
 
+    text-align: center;
 
-    if (!startTime) {
-
-        return;
-
-    }
+}
 
 
-    let elapsed =
-        Math.floor(
-            (
-                Date.now() -
-                startTime
-            ) / 1000
-        );
+.timer-label {
+
+    display: block;
+
+    font-size: 11px;
+
+    color: #555;
+
+}
 
 
-    let remaining =
-        EXAM_TIME -
-        elapsed;
+#timer {
+
+    display: block;
+
+    font-size: 22px;
+
+    font-weight: bold;
+
+}
 
 
-    /*
-       TIME OVER
-    */
+.timer-warning {
 
-    if (
-        remaining <= 0
-    ) {
+    background: #dc2626;
 
-        document.getElementById(
-            "timer"
-        ).innerText =
-            "00:00";
+    color: white;
+
+}
 
 
-        clearInterval(
-            timerInterval
-        );
+.timer-warning .timer-label {
 
+    color: white;
 
-        examEnded =
-            true;
-
-
-        /*
-           Save current answer
-        */
-
-        saveCurrentAnswer();
-
-
-        /*
-           Automatically request
-           candidate details
-        */
-
-        openNameModal(
-            true
-        );
-
-
-        return;
-    }
-
-
-    let minutes =
-        Math.floor(
-            remaining / 60
-        );
-
-
-    let seconds =
-        remaining % 60;
-
-
-    document.getElementById(
-        "timer"
-    ).innerText =
-
-        String(minutes)
-            .padStart(2, "0")
-
-        +
-
-        ":"
-
-        +
-
-        String(seconds)
-            .padStart(2, "0");
-
-
-    /*
-       Last 5 minutes
-    */
-
-    let timerBox =
-        document.querySelector(
-            ".timer-box"
-        );
-
-
-    if (
-        remaining <= 300
-    ) {
-
-        timerBox.classList.add(
-            "timer-warning"
-        );
-
-    }
 }
 
 
 /* =====================================================
-   SUBMIT BUTTON
+   CALCULATOR BUTTON
    ===================================================== */
 
-function submitExam() {
+.calculator-button {
 
-    saveCurrentAnswer();
+    background: white;
 
-    updatePalette();
+    border: none;
+
+    padding: 10px 15px;
+
+    border-radius: 4px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+}
 
 
-    document.getElementById(
-        "submitModal"
-    ).style.display =
-        "flex";
+.calculator-button:disabled {
+
+    opacity: 0.5;
+
+    cursor: not-allowed;
+
 }
 
 
 /* =====================================================
-   CLOSE SUBMIT MODAL
+   START SCREEN
    ===================================================== */
 
-function closeSubmitModal() {
+.start-screen {
 
-    if (examEnded) {
+    min-height: calc(100vh - 70px);
 
-        return;
+    display: flex;
 
-    }
+    justify-content: center;
+
+    align-items: center;
+
+    background: #f3f4f6;
+
+    padding: 30px;
+
+    box-sizing: border-box;
+
+}
 
 
-    document.getElementById(
-        "submitModal"
-    ).style.display =
-        "none";
+.instructions-box {
+
+    width: 750px;
+
+    max-width: 95%;
+
+    background: white;
+
+    padding: 35px 45px;
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 3px 15px rgba(0,0,0,0.15);
+
+    box-sizing: border-box;
+
+}
+
+
+.instructions-box h1 {
+
+    text-align: center;
+
+    color: #1e3a8a;
+
+    margin-top: 0;
+
+}
+
+
+.instructions-box h2 {
+
+    text-align: center;
+
+    color: #333;
+
 }
 
 
 /* =====================================================
-   CONFIRM SUBMISSION
+   TEST DETAILS
    ===================================================== */
 
-function confirmSubmit() {
+.test-details {
 
-    closeSubmitModal();
+    display: flex;
 
+    justify-content: center;
 
-    saveCurrentAnswer();
+    gap: 15px;
 
+    margin-bottom: 25px;
 
-    examEnded =
-        true;
-
-
-    clearInterval(
-        timerInterval
-    );
+}
 
 
-    openNameModal(
-        false
-    );
+.test-details div {
+
+    flex: 1;
+
+    background: #f1f5f9;
+
+    padding: 15px;
+
+    text-align: center;
+
+    border-radius: 5px;
+
+}
+
+
+.test-details strong {
+
+    display: block;
+
+    font-size: 13px;
+
+    color: #555;
+
+    margin-bottom: 6px;
+
+}
+
+
+.test-details span {
+
+    font-size: 17px;
+
+    font-weight: bold;
+
 }
 
 
 /* =====================================================
-   CANDIDATE DETAILS
+   INSTRUCTIONS
    ===================================================== */
 
-function openNameModal(autoSubmit) {
+.instructions-list {
 
-    if (autoSubmit) {
+    line-height: 1.7;
 
-        examEnded =
-            true;
+    padding-left: 25px;
 
-        clearInterval(
-            timerInterval
-        );
-
-    }
+}
 
 
-    saveCurrentAnswer();
+.instructions-list li {
 
-    updatePalette();
+    margin-bottom: 5px;
 
-
-    document.getElementById(
-        "candidateName"
-    ).value = "";
-
-
-    document.getElementById(
-        "candidateMobile"
-    ).value = "";
-
-
-    document.getElementById(
-        "nameModal"
-    ).style.display =
-        "flex";
-
-
-    setTimeout(
-        function () {
-
-            document.getElementById(
-                "candidateName"
-            ).focus();
-
-        },
-        100
-    );
 }
 
 
 /* =====================================================
-   FINAL SUBMIT
+   MARKING SCHEME
    ===================================================== */
 
-function finalSubmit() {
+.marking-scheme {
 
-    let name =
-        document.getElementById(
-            "candidateName"
-        ).value.trim();
+    display: flex;
 
+    gap: 15px;
 
-    let mobile =
-        document.getElementById(
-            "candidateMobile"
-        ).value.trim();
+    margin-top: 15px;
 
+}
 
-    /*
-       Validate name
-    */
 
-    if (
-        name === ""
-    ) {
+.marking-scheme div {
 
-        alert(
-            "Please enter your name."
-        );
+    flex: 1;
 
-        document.getElementById(
-            "candidateName"
-        ).focus();
+    background: #f8fafc;
 
-        return;
+    border: 1px solid #d1d5db;
 
-    }
+    border-radius: 5px;
 
+    padding: 15px;
 
-    /*
-       Validate mobile
-    */
+}
 
-    if (
-        !/^[0-9]{10}$/.test(
-            mobile
-        )
-    ) {
 
-        alert(
-            "Please enter a valid 10-digit mobile number."
-        );
+.marking-scheme strong {
 
-        document.getElementById(
-            "candidateMobile"
-        ).focus();
+    display: block;
 
-        return;
+    color: #1e3a8a;
 
-    }
+    font-size: 17px;
 
+    margin-bottom: 8px;
 
-    /*
-       Save current answer one final time
-    */
+}
 
-    saveCurrentAnswer();
 
+.marking-scheme span {
 
-    /*
-       Calculate score
-    */
+    display: block;
 
-    let score =
-        calculateScore();
+    margin: 4px 0;
 
+    font-size: 14px;
 
-    /*
-       Google Apps Script URL
-
-       IMPORTANT:
-       Replace this with the NEW
-       deployment URL of the Sheet2
-       Apps Script.
-    */
-
-    const SCRIPT_URL =
-        "PASTE_NEW_SHEET2_APPS_SCRIPT_URL_HERE";
-
-
-    /*
-       Build URL
-    */
-
-    let url =
-        SCRIPT_URL;
-
-
-    url +=
-        "?name=" +
-        encodeURIComponent(
-            name
-        );
-
-
-    url +=
-        "&mobile=" +
-        encodeURIComponent(
-            mobile
-        );
-
-
-    /*
-       Send all answers
-    */
-
-    for (
-        let i = 0;
-        i < questions.length;
-        i++
-    ) {
-
-        let answer =
-            answers[i];
-
-
-        if (
-            Array.isArray(answer)
-        ) {
-
-            answer =
-                answer.join(",");
-
-        }
-
-
-        if (
-            answer === null ||
-            answer === undefined
-        ) {
-
-            answer = "";
-
-        }
-
-
-        url +=
-            "&q" +
-            (i + 1) +
-            "=" +
-            encodeURIComponent(
-                answer
-            );
-
-    }
-
-
-    /*
-       Score
-    */
-
-    url +=
-        "&score=" +
-        encodeURIComponent(
-            score
-        );
-
-
-    /*
-       Total marks
-    */
-
-    url +=
-        "&totalMarks=" +
-        encodeURIComponent(
-            getTotalMarks()
-        );
-
-
-    /*
-       Send silently through iframe
-    */
-
-    let iframe =
-        document.createElement(
-            "iframe"
-        );
-
-
-    iframe.style.display =
-        "none";
-
-
-    iframe.src =
-        url;
-
-
-    document.body.appendChild(
-        iframe
-    );
-
-
-    /*
-       Hide candidate modal
-    */
-
-    document.getElementById(
-        "nameModal"
-    ).style.display =
-        "none";
-
-
-    /*
-       Show result
-    */
-
-    document.getElementById(
-        "resultName"
-    ).innerText =
-        "Candidate: " +
-        name;
-
-
-    document.getElementById(
-        "resultMobile"
-    ).innerText =
-        "Mobile: " +
-        mobile;
-
-
-    document.getElementById(
-        "resultScore"
-    ).innerText =
-        score +
-        " / " +
-        getTotalMarks();
-
-
-    setTimeout(
-        function () {
-
-            document.getElementById(
-                "resultModal"
-            ).style.display =
-                "flex";
-
-        },
-        800
-    );
-
-
-    sessionStorage.removeItem(
-        "gateExamStartTime"
-    );
 }
 
 
 /* =====================================================
-   SCORE CALCULATION
+   IMPORTANT NOTE
    ===================================================== */
 
-function calculateScore() {
+.important-note {
 
-    let score = 0;
+    background: #fff7ed;
 
+    border-left: 4px solid #f97316;
 
-    for (
-        let i = 0;
-        i < questions.length;
-        i++
-    ) {
+    padding: 12px 15px;
 
-        let q =
-            questions[i];
+    margin-top: 20px;
 
-
-        let type =
-            getQuestionType(q);
-
-
-        let marks =
-            getQuestionMarks(
-                q,
-                i
-            );
-
-
-        let studentAnswer =
-            answers[i];
-
-
-        /*
-           Unanswered
-        */
-
-        if (
-            studentAnswer === null ||
-            studentAnswer === undefined
-        ) {
-
-            continue;
-
-        }
-
-
-        /*
-           NAT
-        */
-
-        if (
-            type === "NAT" ||
-            type === "NUMERICAL"
-        ) {
-
-            if (
-                checkNAT(
-                    q,
-                    studentAnswer
-                )
-            ) {
-
-                score += marks;
-
-            }
-
-            continue;
-        }
-
-
-        /*
-           MSQ
-        */
-
-        if (
-            type === "MSQ" ||
-            type === "MULTIPLE SELECT"
-        ) {
-
-            if (
-                checkMSQ(
-                    q,
-                    studentAnswer
-                )
-            ) {
-
-                score += marks;
-
-            }
-
-            continue;
-        }
-
-
-        /*
-           MCQ
-        */
-
-        if (
-            checkMCQ(
-                q,
-                studentAnswer
-            )
-        ) {
-
-            score += marks;
-
-        }
-
-        else {
-
-            /*
-               Negative marking only
-               for MCQ.
-
-               Default:
-               1-mark MCQ = -1/3
-               2-mark MCQ = -2/3
-
-               If questions.js defines
-               negativeMarks, use that.
-            */
-
-            if (
-                q.negativeMarks !== undefined
-            ) {
-
-                score -=
-                    Number(
-                        q.negativeMarks
-                    );
-
-            }
-
-            else {
-
-                score -=
-                    marks / 3;
-
-            }
-
-        }
-
-    }
-
-
-    /*
-       Prevent negative total
-    */
-
-    if (
-        score < 0
-    ) {
-
-        score = 0;
-
-    }
-
-
-    /*
-       Round score
-    */
-
-    return Number(
-        score.toFixed(2)
-    );
 }
 
 
 /* =====================================================
-   TOTAL MARKS
+   START BUTTON
    ===================================================== */
 
-function getTotalMarks() {
+.start-button {
 
-    let total = 0;
+    display: block;
+
+    margin: 30px auto 0;
+
+    padding: 14px 45px;
+
+    background: #1e3a8a;
+
+    color: white;
+
+    border: none;
+
+    border-radius: 5px;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
 
 
-    for (
-        let i = 0;
-        i < questions.length;
-        i++
-    ) {
+.start-button:hover {
 
-        total +=
-            getQuestionMarks(
-                questions[i],
-                i
-            );
+    background: #172554;
 
-    }
-
-
-    return total;
 }
 
 
 /* =====================================================
-   MCQ CHECK
+   EXAM AREA
    ===================================================== */
 
-function checkMCQ(
-    q,
-    studentAnswer
-) {
+.container {
 
-    let correct =
-        q.answer;
+    display: flex;
 
+    min-height: calc(100vh - 70px);
 
-    /*
-       If answer is stored as
-       an option index.
-    */
-
-    if (
-        Number.isInteger(
-            correct
-        )
-    ) {
-
-        return (
-            Number(
-                studentAnswer
-            ) ===
-            Number(
-                correct
-            )
-        );
-
-    }
+}
 
 
-    /*
-       If answer is stored as
-       A/B/C/D.
-    */
+.question-area {
 
-    if (
-        typeof correct === "string"
-    ) {
+    width: 70%;
 
-        let normalized =
-            correct
-                .trim()
-                .toUpperCase();
+    padding: 30px;
+
+    box-sizing: border-box;
+
+}
 
 
-        if (
-            /^[A-D]$/.test(
-                normalized
-            )
-        ) {
+.question-type {
 
-            let correctIndex =
-                normalized.charCodeAt(0)
-                -
-                "A".charCodeAt(0);
+    display: inline-block;
 
+    background: #e0e7ff;
 
-            return (
-                Number(
-                    studentAnswer
-                ) ===
-                correctIndex
-            );
+    color: #1e3a8a;
 
-        }
+    padding: 5px 12px;
 
-    }
+    border-radius: 4px;
+
+    font-weight: bold;
+
+    font-size: 13px;
+
+    margin-bottom: 10px;
+
+}
 
 
-    return (
-        String(
-            studentAnswer
-        ) ===
-        String(
-            correct
-        )
-    );
+#question {
+
+    white-space: pre-line;
+
+    font-size: 20px;
+
+    line-height: 1.6;
+
+    margin-bottom: 25px;
+
 }
 
 
 /* =====================================================
-   MSQ CHECK
+   OPTIONS
    ===================================================== */
 
-function checkMSQ(
-    q,
-    studentAnswer
-) {
+#options {
 
-    let correct =
-        q.answer;
+    font-size: 17px;
+
+}
 
 
-    /*
-       Convert correct answer
-       to an array.
-    */
+#options label {
 
-    if (
-        !Array.isArray(
-            correct
-        )
-    ) {
+    display: block;
 
-        if (
-            typeof correct === "string"
-        ) {
+    padding: 10px;
 
-            correct =
-                correct
-                    .split(",")
-                    .map(
-                        function (x) {
+    margin-bottom: 5px;
 
-                            return x
-                                .trim();
+    cursor: pointer;
 
-                        }
-                    );
+    border-radius: 4px;
 
-        }
-
-        else {
-
-            correct =
-                [correct];
-
-        }
-
-    }
+}
 
 
-    /*
-       Convert A/B/C/D answers
-       to indices if required.
-    */
+#options label:hover {
 
-    correct =
-        correct.map(
-            function (item) {
+    background: #f1f5f9;
 
-                if (
-                    typeof item === "string" &&
-                    /^[A-D]$/i.test(
-                        item.trim()
-                    )
-                ) {
-
-                    return (
-                        item
-                            .trim()
-                            .toUpperCase()
-                            .charCodeAt(0)
-                        -
-                        "A".charCodeAt(0)
-                    );
-
-                }
-
-                return Number(item);
-
-            }
-        );
+}
 
 
-    let student =
-        Array.isArray(
-            studentAnswer
-        )
-            ? studentAnswer
-            : [studentAnswer];
+#options input {
 
+    margin-right: 10px;
 
-    student =
-        student.map(
-            Number
-        );
-
-
-    correct.sort(
-        function (a, b) {
-            return a - b;
-        }
-    );
-
-
-    student.sort(
-        function (a, b) {
-            return a - b;
-        }
-    );
-
-
-    return (
-        JSON.stringify(
-            correct
-        ) ===
-        JSON.stringify(
-            student
-        )
-    );
 }
 
 
 /* =====================================================
-   NAT CHECK
+   BUTTONS
    ===================================================== */
 
-function checkNAT(
-    q,
-    studentAnswer
-) {
+.buttons {
 
-    let correct =
-        Number(
-            q.answer
-        );
+    margin-top: 35px;
+
+}
 
 
-    let student =
-        Number(
-            studentAnswer
-        );
+.buttons button {
+
+    margin: 5px;
+
+    padding: 11px 16px;
+
+    border: 1px solid #777;
+
+    background: white;
+
+    color: #111;
+
+    border-radius: 4px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+}
 
 
-    if (
-        !Number.isFinite(
-            correct
-        ) ||
-        !Number.isFinite(
-            student
-        )
-    ) {
+.buttons button:hover {
 
-        return false;
+    background: #e5e7eb;
 
-    }
+}
 
 
-    /*
-       Use tolerance if supplied.
+.submit-button {
 
-       Supported fields:
+    background: #1e3a8a !important;
 
-       q.tolerance
-       q.tol
-       q.range
-    */
+    color: white !important;
 
-    if (
-        q.tolerance !== undefined
-    ) {
+    border-color: #1e3a8a !important;
 
-        return (
-            Math.abs(
-                student -
-                correct
-            ) <=
-            Number(
-                q.tolerance
-            )
-        );
-
-    }
-
-
-    if (
-        q.tol !== undefined
-    ) {
-
-        return (
-            Math.abs(
-                student -
-                correct
-            ) <=
-            Number(
-                q.tol
-            )
-        );
-
-    }
-
-
-    /*
-       If no tolerance is specified,
-       compare to 2 decimal places.
-    */
-
-    return (
-        Number(
-            student.toFixed(2)
-        ) ===
-        Number(
-            correct.toFixed(2)
-        )
-    );
 }
 
 
 /* =====================================================
-   RESULT
+   PALETTE
    ===================================================== */
 
-function closeResultAndReload() {
+.palette-section {
 
-    location.reload();
+    width: 30%;
+
+    background: #f1f1f1;
+
+    padding: 25px;
+
+    box-sizing: border-box;
+
+}
+
+
+.palette-section h3 {
+
+    margin-top: 0;
+
+}
+
+
+.legend {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+    margin-bottom: 25px;
+
+}
+
+
+.legend-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    font-size: 14px;
+
+}
+
+
+.legend-box {
+
+    width: 22px;
+
+    height: 22px;
+
+    display: inline-block;
+
+    border: 1px solid #777;
+
+    border-radius: 3px;
+
+}
+
+
+.legend-box.answered {
+
+    background: #22c55e;
+
+}
+
+
+.legend-box.review {
+
+    background: #9333ea;
+
+}
+
+
+.legend-box.not-answered {
+
+    background: #d1d5db;
+
+}
+
+
+.palette {
+
+    display: grid;
+
+    grid-template-columns: repeat(5, 50px);
+
+    gap: 10px;
+
+}
+
+
+.palette button {
+
+    height: 45px;
+
+    width: 45px;
+
+    border: 1px solid #777;
+
+    border-radius: 4px;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+}
+
+
+.palette button.not-answered {
+
+    background: #d1d5db !important;
+
+}
+
+
+.palette button.answered {
+
+    background: #22c55e !important;
+
+    color: white !important;
+
+}
+
+
+.palette button.review {
+
+    background: #9333ea !important;
+
+    color: white !important;
 
 }
 
@@ -1851,570 +682,292 @@ function closeResultAndReload() {
    CALCULATOR
    ===================================================== */
 
-function openCalculator() {
+.calculator-overlay {
 
-    document.getElementById(
-        "calculator"
-    ).style.display =
-        "block";
+    display: none;
 
-}
+    position: fixed;
 
+    top: 0;
 
-function closeCalculator() {
+    left: 0;
 
-    document.getElementById(
-        "calculator"
-    ).style.display =
-        "none";
+    width: 100%;
 
-}
+    height: 100%;
 
+    background: rgba(0,0,0,0.35);
 
-function calcInput(value) {
-
-    let display =
-        document.getElementById(
-            "calc-display"
-        );
-
-
-    display.value +=
-        value;
+    z-index: 1000;
 
 }
 
 
-function calcClear() {
+.calculator {
 
-    document.getElementById(
-        "calc-display"
-    ).value = "";
+    position: absolute;
+
+    top: 100px;
+
+    right: 40px;
+
+    width: 330px;
+
+    background: #f3f4f6;
+
+    border: 1px solid #555;
+
+    border-radius: 6px;
+
+    box-shadow:
+        0 5px 20px rgba(0,0,0,0.3);
 
 }
 
 
-function calcBackspace() {
+.calculator-header {
 
-    let display =
-        document.getElementById(
-            "calc-display"
-        );
+    background: #1e3a8a;
+
+    color: white;
+
+    padding: 12px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    font-weight: bold;
+
+}
 
 
-    display.value =
-        display.value.slice(
-            0,
-            -1
-        );
+.calculator-header button {
+
+    background: transparent;
+
+    color: white;
+
+    border: none;
+
+    font-size: 22px;
+
+    cursor: pointer;
+
+}
+
+
+.calc-display {
+
+    width: calc(100% - 20px);
+
+    margin: 10px;
+
+    height: 45px;
+
+    box-sizing: border-box;
+
+    font-size: 20px;
+
+    text-align: right;
+
+    padding: 8px;
+
+    border: 1px solid #777;
+
+}
+
+
+.calc-buttons {
+
+    display: grid;
+
+    grid-template-columns: repeat(5, 1fr);
+
+    gap: 5px;
+
+    padding: 10px;
+
+}
+
+
+.calc-buttons button {
+
+    height: 45px;
+
+    border: 1px solid #999;
+
+    background: white;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+    border-radius: 3px;
+
+}
+
+
+/* =====================================================
+   MODALS
+   ===================================================== */
+
+.modal-overlay {
+
+    display: none;
+
+    position: fixed;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    background: rgba(0,0,0,0.45);
+
+    z-index: 2000;
+
+    justify-content: center;
+
+    align-items: center;
+
+}
+
+
+.modal-box {
+
+    width: 420px;
+
+    max-width: 90%;
+
+    background: white;
+
+    border-radius: 6px;
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,0.3);
+
+    padding: 25px;
+
+    text-align: center;
+
+}
+
+
+.modal-box h2 {
+
+    color: #1e3a8a;
+
+}
+
+
+.modal-buttons {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 15px;
+
+    margin-top: 25px;
+
+}
+
+
+.modal-buttons button,
+.result-box > button {
+
+    padding: 10px 25px;
+
+    border-radius: 4px;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+}
+
+
+.modal-cancel {
+
+    background: white;
+
+    border: 1px solid #777;
+
+}
+
+
+.modal-submit {
+
+    background: #1e3a8a;
+
+    color: white;
+
+    border: 1px solid #1e3a8a;
 
 }
 
 
 /* =====================================================
-   CALCULATOR ANGLE MODE
+   NAME INPUT
    ===================================================== */
 
-function toggleAngleMode() {
+.name-input {
 
-    if (
-        angleMode === "DEG"
-    ) {
+    width: 100%;
 
-        angleMode =
-            "RAD";
+    box-sizing: border-box;
 
-    }
+    padding: 12px;
 
-    else {
+    border: 1px solid #999;
 
-        angleMode =
-            "DEG";
+    border-radius: 4px;
 
-    }
+    font-size: 16px;
 
-
-    document.getElementById(
-        "angleModeButton"
-    ).innerText =
-        angleMode;
 }
 
 
 /* =====================================================
-   CALCULATOR FUNCTIONS
+   SCORE
    ===================================================== */
 
-function calcFunction(
-    operation
-) {
+.score-display {
 
-    let display =
-        document.getElementById(
-            "calc-display"
-        );
+    margin: 25px auto;
 
+    padding: 20px;
 
-    let value =
-        Number(
-            display.value
-        );
+    background: #f1f5f9;
 
+    border-radius: 6px;
 
-    if (
-        !Number.isFinite(
-            value
-        )
-    ) {
-
-        display.value =
-            "Error";
-
-        return;
-
-    }
-
-
-    let result;
-
-
-    switch (
-        operation
-    ) {
-
-        case "sin":
-
-            result =
-                Math.sin(
-                    toRadians(
-                        value
-                    )
-                );
-
-            break;
-
-
-        case "cos":
-
-            result =
-                Math.cos(
-                    toRadians(
-                        value
-                    )
-                );
-
-            break;
-
-
-        case "tan":
-
-            result =
-                Math.tan(
-                    toRadians(
-                        value
-                    )
-                );
-
-            break;
-
-
-        case "asin":
-
-            result =
-                fromRadians(
-                    Math.asin(
-                        value
-                    )
-                );
-
-            break;
-
-
-        case "acos":
-
-            result =
-                fromRadians(
-                    Math.acos(
-                        value
-                    )
-                );
-
-            break;
-
-
-        case "atan":
-
-            result =
-                fromRadians(
-                    Math.atan(
-                        value
-                    )
-                );
-
-            break;
-
-
-        case "log":
-
-            result =
-                Math.log10(
-                    value
-                );
-
-            break;
-
-
-        case "ln":
-
-            result =
-                Math.log(
-                    value
-                );
-
-            break;
-
-
-        case "sqrt":
-
-        case "squareRoot":
-
-            result =
-                Math.sqrt(
-                    value
-                );
-
-            break;
-
-
-        case "inverse":
-
-            result =
-                1 / value;
-
-            break;
-
-
-        case "abs":
-
-            result =
-                Math.abs(
-                    value
-                );
-
-            break;
-
-
-        case "sign":
-
-            result =
-                -value;
-
-            break;
-
-
-        case "exp":
-
-            result =
-                Math.exp(
-                    value
-                );
-
-            break;
-
-
-        case "factorial":
-
-            result =
-                factorial(
-                    value
-                );
-
-            break;
-
-
-        default:
-
-            return;
-
-    }
-
-
-    if (
-        Number.isFinite(
-            result
-        )
-    ) {
-
-        display.value =
-            formatCalculatorResult(
-                result
-            );
-
-    }
-
-    else {
-
-        display.value =
-            "Error";
-
-    }
 }
 
 
-/* =====================================================
-   CALCULATOR EVALUATION
-   ===================================================== */
+.score-display span {
 
-function calculateResult() {
+    display: block;
 
-    let display =
-        document.getElementById(
-            "calc-display"
-        );
+    color: #555;
 
+    margin-bottom: 8px;
 
-    let expression =
-        display.value;
-
-
-    if (
-        expression.trim() === ""
-    ) {
-
-        return;
-
-    }
-
-
-    try {
-
-        /*
-           Power operator
-        */
-
-        expression =
-            expression.replace(
-                /\^/g,
-                "**"
-            );
-
-
-        /*
-           Percentage
-
-           50% → (50/100)
-        */
-
-        expression =
-            expression.replace(
-                /(\d+(?:\.\d+)?)%/g,
-                "($1/100)"
-            );
-
-
-        /*
-           Safe calculator evaluation
-
-           Only mathematical characters,
-           Math.PI and Math.E are allowed.
-        */
-
-        if (
-            !/^[0-9+\-*/().\sA-Za-z_]*$/.test(
-                expression
-            )
-        ) {
-
-            throw new Error(
-                "Invalid expression"
-            );
-
-        }
-
-
-        let result =
-            Function(
-                "Math",
-                '"use strict"; return (' +
-                expression +
-                ");"
-            )(
-                Math
-            );
-
-
-        if (
-            typeof result !== "number" ||
-            !Number.isFinite(
-                result
-            )
-        ) {
-
-            throw new Error(
-                "Invalid result"
-            );
-
-        }
-
-
-        display.value =
-            formatCalculatorResult(
-                result
-            );
-
-    }
-
-    catch (
-        error
-    ) {
-
-        display.value =
-            "Error";
-
-    }
 }
 
 
-/* =====================================================
-   FACTORIAL
-   ===================================================== */
+.score-display strong {
 
-function factorial(
-    n
-) {
+    display: block;
 
-    if (
-        n < 0 ||
-        !Number.isInteger(n)
-    ) {
+    font-size: 32px;
 
-        return NaN;
-
-    }
-
-
-    if (
-        n > 170
-    ) {
-
-        return Infinity;
-
-    }
-
-
-    let result = 1;
-
-
-    for (
-        let i = 2;
-        i <= n;
-        i++
-    ) {
-
-        result *= i;
-
-    }
-
-
-    return result;
-}
-
-
-/* =====================================================
-   ANGLE CONVERSION
-   ===================================================== */
-
-function toRadians(
-    value
-) {
-
-    if (
-        angleMode === "RAD"
-    ) {
-
-        return value;
-
-    }
-
-
-    return (
-        value *
-        Math.PI /
-        180
-    );
-}
-
-
-function fromRadians(
-    value
-) {
-
-    if (
-        angleMode === "RAD"
-    ) {
-
-        return value;
-
-    }
-
-
-    return (
-        value *
-        180 /
-        Math.PI
-    );
-}
-
-
-/* =====================================================
-   CALCULATOR FORMAT
-   ===================================================== */
-
-function formatCalculatorResult(
-    value
-) {
-
-    if (
-        Math.abs(value) < 1e-12
-    ) {
-
-        value = 0;
-
-    }
-
-
-    return Number(
-        value.toPrecision(12)
-    ).toString();
-}
-
-
-/* =====================================================
-   HTML ESCAPE
-   ===================================================== */
-
-function escapeAttribute(
-    value
-) {
-
-    return String(
-        value
-    )
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        );
+    color: #1e3a8a;
 
 }
