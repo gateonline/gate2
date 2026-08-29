@@ -647,7 +647,7 @@ function sendResultToGoogleSheet(
 ) {
 
     let url =
-        "https://script.google.com/macros/s/AKfycbyp-6oaHho0YJ_dh_m7S189TUghfzsTs_3YvRxkchmsCzuCfUPOjlK7CtzgXqGSM71d/exec";
+        "https://script.google.com/macros/s/AKfycbw_AyF_eyKtsgT-ufYemQjAa6QxhOzzySsmJCY45fxeBZtT2xc0O-ARRlpdv2PQVX7Piw/exec";
 
 
     url +=
