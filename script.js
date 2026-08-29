@@ -1297,7 +1297,7 @@ function finalSubmit() {
     */
 
     const SCRIPT_URL =
-        "PASTE_NEW_SHEET2_APPS_SCRIPT_URL_HERE";
+        "https://script.google.com/macros/s/AKfycbw_AyF_eyKtsgT-ufYemQjAa6QxhOzzySsmJCY45fxeBZtT2xc0O-ARRlpdv2PQVX7Piw/exec";
 
 
     /*
