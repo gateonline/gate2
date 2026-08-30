@@ -1,429 +1,554 @@
 const questions = [
 
-    {
-        question:
-            "A step-growth polymerization involves monomers with average functionality greater than 2.\n\nWhich consequences are possible?",
+/* =====================================================
+   Q1 — MCQ — 1 MARK
+   ===================================================== */
 
-        options: [
-            "Branching",
-            "Gelation",
-            "Crosslinking",
-            "Formation of an exclusively linear polymer"
-        ],
+{
+    question:
+        "Glyptal, an alkyd resin, is synthesized by reacting phthalic anhydride with glycerol. What are the respective functionalities of phthalic anhydride and glycerol?",
 
-        correctAnswers: [0, 1, 2],
+    options: [
+        "1, 3",
+        "2, 3",
+        "1, 2",
+        "2, 2"
+    ],
 
-        type: "MSQ",
+    answer: 1,
 
-        marks: 1
-    },
+    type: "MCQ",
 
+    marks: 1
+},
 
-    {
-        question:
-            "A metallocene catalyst with a symmetric, achiral (non-bridged) ligand geometry polymerizes propylene to give predominantly:",
 
-        options: [
-            "Isotactic polypropylene",
-            "Syndiotactic polypropylene",
-            "Atactic polypropylene",
-            "Crosslinked polypropylene"
-        ],
+/* =====================================================
+   Q2 — MCQ — 1 MARK
+   ===================================================== */
 
-        answer: 2,
+{
+    question:
+        "What is the functionality of 1,4-divinylbenzene when it undergoes addition reactions across its carbon-carbon double bonds?",
 
-        type: "MCQ",
+    options: [
+        "1",
+        "2",
+        "3",
+        "4"
+    ],
 
-        marks: 1
-    },
+    answer: 3,
 
+    type: "MCQ",
 
-    {
-        question:
-            "Among the options given, choose the most suitable compatibilizer for blending Polyvinylidene fluoride (PVDF) and Acrylonitrile butadiene styrene (ABS).",
+    marks: 1
+},
 
-        options: [
-            "Styrene-acrylonitrile (SAN)",
-            "Polybutadiene (PB)",
-            "Polymethyl methacrylate (PMMA)",
-            "Nylon 6"
-        ],
 
-        answer: 2,
+/* =====================================================
+   Q3 — MCQ — 1 MARK
+   ===================================================== */
 
-        type: "MCQ",
+{
+    question:
+        "During the step-growth polymerization of phenol with formaldehyde, what is the functionality of phenol?",
 
-        marks: 1
-    },
+    options: [
+        "2",
+        "3",
+        "4",
+        "5"
+    ],
 
+    answer: 1,
 
-    {
-        question:
-            "A polymer blend has the following characteristics:\n\n" +
-            "- Poor impact strength\n" +
-            "- Large dispersed domains\n" +
-            "- High interfacial tension\n" +
-            "- Two glass transition temperatures\n\n" +
-            "Which modification is most likely to improve the mechanical properties?",
+    type: "MCQ",
 
-        options: [
-            "Increase processing temperature only.",
-            "Add a suitable compatibilizer.",
-            "Increase molecular weight of one polymer only.",
-            "Increase filler loading."
-        ],
+    marks: 1
+},
 
-        answer: 1,
 
-        type: "MCQ",
+/* =====================================================
+   Q4 — MCQ — 1 MARK
+   ===================================================== */
 
-        marks: 1
-    },
+{
+    question:
+        "Which one of the monomers given is used in the synthesis of cellulose? (G-23)",
 
+    options: [
+        "Fructose",
+        "Lactic acid",
+        "Galactose",
+        "Glucose"
+    ],
 
-    {
-        question:
-            "A polymer waste stream is processed into a product whose performance is significantly lower than that of the original application, although the polymer remains chemically usable.\n\nThis process is best described as:",
+    answer: 3,
 
-        options: [
-            "Upcycling",
-            "Downcycling",
-            "Feedstock recycling",
-            "Energy recovery"
-        ],
+    type: "MCQ",
 
-        answer: 1,
+    marks: 1
+},
 
-        type: "MCQ",
 
-        marks: 1
-    },
+/* =====================================================
+   Q5 — MCQ — 1 MARK
+   ===================================================== */
 
+{
+    question:
+        "A polymer scientist isolates a polymer from a plant source. Hydrolysis of the polymer yields only glucose molecules. The polymer is most likely:",
 
-    {
-        question:
-            "MBS or CPE is added to rigid PVC (uPVC) window profiles. The primary mechanism by which these impact modifiers toughen PVC is:",
+    options: [
+        "Polycarbonate",
+        "Cellulose",
+        "Nylon-6",
+        "Polypropylene"
+    ],
 
-        options: [
-            "They plasticize PVC, lowering its Tg below room temperature",
+    answer: 1,
 
-            "Dispersed rubbery particles cavitate and initiate/terminate localized shear yielding and crazing, absorbing impact energy",
+    type: "MCQ",
 
-            "They co-crystallize with PVC, increasing crystallinity",
+    marks: 1
+},
 
-            "They crosslink the PVC matrix"
-        ],
 
-        answer: 1,
+/* =====================================================
+   Q6 — MCQ — 1 MARK
+   ===================================================== */
 
-        type: "MCQ",
+{
+    question:
+        "A researcher wants to prepare a polymer that can be enzymatically degraded in the human body. Which monomer would be the most suitable starting material?",
 
-        marks: 1
-    },
+    options: [
+        "Vinyl chloride",
+        "Styrene",
+        "Lactic acid",
+        "Ethylene"
+    ],
 
+    answer: 2,
 
-    {
-        question:
-            "Match the following.\n\n" +
-            "P. Glassy polymer under small strain\n" +
-            "Q. Rubbery polymer\n" +
-            "R. Stress relaxation\n" +
-            "S. Plastic deformation\n\n" +
-            "1. Entropy-driven elasticity\n" +
-            "2. Bond stretching and bond-angle distortion\n" +
-            "3. Excess free energy is dissipated with time\n" +
-            "4. Irreversible chain slippage\n\n" +
-            "Choose the correct option.",
+    type: "MCQ",
 
-        options: [
-            "P-2, Q-1, R-3, S-4",
-            "P-1, Q-2, R-3, S-4",
-            "P-2, Q-4, R-1, S-3",
-            "P-4, Q-1, R-2, S-3"
-        ],
+    marks: 1
+},
 
-        answer: 0,
 
-        type: "MCQ",
+/* =====================================================
+   Q7 — MCQ — 1 MARK
+   ===================================================== */
 
-        marks: 2
-    },
+{
+    question:
+        "Among the options given, identify the correct match between the polymers and their glass transition temperatures (Tg). (G-23)\n\n" +
 
+        "P. High density polyethylene\n" +
+        "Q. Poly(vinyl carbazole)\n" +
+        "R. Polymethyl methacrylate\n" +
+        "S. Polycarbonate\n\n" +
 
-    {
-        question:
-            "Which of the following statements are CORRECT?",
+        "1. >200 °C\n" +
+        "2. 145 to 155 °C\n" +
+        "3. -100 to -80 °C\n" +
+        "4. 90 to 100 °C\n\n" +
 
-        options: [
-            "SMC (sheet moulding compound) contains longer fibers than DMC/BMC, giving better mechanical properties",
+        "Choose the correct option.",
 
-            "SMC is matured (thickened using MgO) before moulding to reach a leather-like, handleable viscosity",
+    options: [
+        "P-2; Q-4; R-3; S-1",
+        "P-3; Q-1; R-4; S-2",
+        "P-3; Q-4; R-1; S-2",
+        "P-4; Q-2; R-1; S-3"
+    ],
 
-            "BMC/DMC are typically processed by compression, transfer, or injection moulding",
+    answer: 1,
 
-            "SMC is a thermoplastic prepreg that can be re-melted and reused"
-        ],
+    type: "MCQ",
 
-        correctAnswers: [0, 1, 2],
+    marks: 1
+},
 
-        type: "MSQ",
 
-        marks: 2
-    },
+/* =====================================================
+   Q8 — NAT — 1 MARK
+   ===================================================== */
 
+{
+    question:
+        "In a stoichiometric polycondensation of a diol and a diacid, the number-average degree of polymerization required is X̄n = 50. The percent conversion (p) of functional groups needed, in %, is ________ (round to one decimal place).",
 
-    {
-        question:
-            "A free-radical polymerization is run at Rp = 2.0 × 10⁻⁴ mol L⁻¹ s⁻¹ with initiator concentration 0.01 mol/L. Midway, additional initiator is added to bring the concentration to 0.09 mol/L (monomer concentration unchanged). The new rate, in units of 10⁻⁴ mol L⁻¹ s⁻¹, is ________.\n\n" +
-            "Enter the answer correct to TWO decimal places.",
+    type: "NAT",
 
-        type: "NAT",
+    answer: 98.0,
 
-        answer: 6.00,
+    marks: 1
+},
 
-        marks: 1
-    },
 
+/* =====================================================
+   Q9 — MCQ — 1 MARK
+   ===================================================== */
 
-    {
-        question:
-            "A polymer consists of only two molecular-weight fractions:\n\n" +
-            "20% of the molecules have M = 10,000 g/mol\n" +
-            "80% of the molecules have M = 50,000 g/mol\n\n" +
-            "Calculate the weight-average molecular weight in g/mol.\n\n" +
-            "Enter the answer correct to TWO decimal places.",
+{
+    question:
+        "Glycerol reacted with a large excess of acetic acid (monofunctional) will produce:",
 
-        type: "NAT",
+    options: [
+        "A crosslinked network polymer, since glycerol is trifunctional",
+        "A linear polyester of high molecular weight",
+        "Only low-molecular-weight ester (no polymer), since chain growth is terminated by the monofunctional acid",
+        "A hyperbranched polymer"
+    ],
 
-        answer: 48095.24,
+    answer: 2,
 
-        marks: 1
-    },
+    type: "MCQ",
 
+    marks: 1
+},
 
-    {
-        question:
-            "A polymer is modeled as a Maxwell element.\n\n" +
-            "The instantaneous strain accounts for 25% of the total strain after 15 s under constant stress.\n\n" +
-            "If the elastic modulus is 1200 MPa, determine the viscosity of the material in MPa·s.\n\n" +
-            "Enter the answer correct to TWO decimal places.",
 
-        type: "NAT",
+/* =====================================================
+   Q10 — NAT — 1 MARK
+   ===================================================== */
 
-        answer: 6000.00,
+{
+    question:
+        "In a free-radical polymerization, doubling the initiator concentration (all else constant) changes the polymerization rate Rp by a factor of ________, given Rp ∝ [M][I]^½. Round to two decimal places.",
 
-        marks: 2
-    },
+    type: "NAT",
 
+    answer: 1.41,
 
-    {
-        question:
-            "A part has a projected area of 150 cm² and the cavity pressure during injection is 40 MPa. The minimum clamping force required, in tonnes (take 1 tonne-force = 9810 N), is ________.\n\n" +
-            "Enter the answer correct to TWO decimal places.",
+    marks: 1
+},
 
-        type: "NAT",
 
-        answer: 61.16,
+/* =====================================================
+   Q11 — MCQ — 2 MARKS
+   ===================================================== */
 
-        marks: 1
-    },
+{
+    question:
+        "A monomer mixture contains 3 mol of a diol, 2 mol of a diacid, and 1 mol of a triacid. The average functionality (f_avg) of the system, considering all molecules, is:",
 
+    options: [
+        "2.00",
+        "2.17",
+        "2.50",
+        "3.00"
+    ],
 
-    {
-        question:
-            "A polymer specimen absorbs 12 J of energy in a notched impact test. The specimen thickness is 4 mm.\n\n" +
-            "The reported impact strength is defined as energy absorbed per unit thickness.\n\n" +
-            "What is the impact strength?",
+    answer: 1,
 
-        options: [
-            "3 J/mm",
-            "48 J/mm",
-            "3000 J/m",
-            "Both A and C"
-        ],
+    type: "MCQ",
 
-        answer: 3,
+    marks: 2
+},
 
-        type: "MCQ",
 
-        marks: 1
-    },
+/* =====================================================
+   Q12 — MCQ — 1 MARK
+   ===================================================== */
 
+{
+    question:
+        "α-Methylstyrene has a low ceiling temperature (~61 °C). Attempting free-radical polymerization of pure α-methylstyrene at 80 °C will result in:",
 
-    {
-        question:
-            "Which statement is most appropriate?",
+    options: [
+        "Very high molecular weight polymer, since rate increases with temperature",
+        "No significant polymer formation, since depropagation outpaces propagation above T_c",
+        "Crosslinked polymer due to thermal branching",
+        "Alternating copolymer with itself"
+    ],
 
-        options: [
-            "This is mechanical recycling because the polymers are physically separated.",
+    answer: 1,
 
-            "This is chemical/feedstock recycling involving thermal degradation.",
+    type: "MCQ",
 
-            "This is energy recovery because no chemical bonds are broken.",
+    marks: 1
+},
 
-            "This is primary recycling because the original polymers are recovered unchanged."
-        ],
 
-        answer: 1,
+/* =====================================================
+   Q13 — NAT — 1 MARK
+   ===================================================== */
 
-        type: "MCQ",
+{
+    question:
+        "Monomers A and B are copolymerized with r_A = 4.0 and r_B = 0.25 from an equimolar feed (f_A = f_B = 0.5). Using the Mayo–Lewis equation, the instantaneous mole fraction of A in the copolymer, F_A, is ________ (round to two decimal places).",
 
-        marks: 1
-    },
+    type: "NAT",
 
+    answer: 0.80,
 
-    {
-        question:
-            "A polymer capacitor has a dielectric material with dielectric constant εr = 4. The electric field inside the material is 2 × 10⁶ V/m.\n\n" +
-            "If ε0 = 8.85 × 10⁻¹² F/m, calculate the magnitude of the electric displacement D in C/m².\n\n" +
-            "Enter the answer correct to TWO decimal places.",
+    marks: 1
+},
 
-        type: "NAT",
 
-        answer: 0.0000708,
+/* =====================================================
+   Q14 — MSQ — 1 MARK
+   ===================================================== */
 
-        marks: 1
-    },
+{
+    question:
+        "In a free-radical polymerization, a chain transfer agent (e.g., a mercaptan) is added. Which statements are CORRECT?",
 
+    options: [
+        "The overall rate of polymerization Rp remains essentially unchanged if the new radical reinitiates efficiently",
 
-    {
-        question:
-            "A polymer sample has a number-average molecular weight of 40,000 g/mol and a weight-average molecular weight of 100,000 g/mol. Calculate the polydispersity index.\n\n" +
-            "Enter the answer correct to TWO decimal places.",
+        "The number-average degree of polymerization decreases",
 
-        type: "NAT",
+        "Chain transfer to polymer leads to branching, as in LDPE",
 
-        answer: 2.50,
+        "The Mayo equation relates 1/X̄n to the ratio [S]/[M] with slope equal to the chain transfer constant C_s"
+    ],
 
-        marks: 2
-    },
+    correctAnswers: [0, 1, 2, 3],
 
+    type: "MSQ",
 
-    {
-        question:
-            "For a step-growth polymerization of an AB-type monomer, which condition is most directly associated with the onset of gelation in a multifunctional system?",
+    marks: 1
+},
 
-        options: [
-            "The average functionality remains exactly equal to one",
-            "The extent of reaction reaches the critical gel-point conversion",
-            "The monomer concentration becomes zero",
-            "The glass transition temperature becomes equal to the melting temperature"
-        ],
 
-        answer: 1,
+/* =====================================================
+   Q15 — MCQ — 1 MARK
+   ===================================================== */
 
-        type: "MCQ",
+{
+    question:
+        "Poly(ethylene terephthalate) is NOT rubbery at room temperature, while natural rubber is. Which combination of reasons is correct?",
 
-        marks: 2
-    },
+    options: [
+        "PET: Tg above room temperature and crystallizability; NR: Tg far below room temperature, amorphous in unstrained state, crosslinkable",
 
+        "PET: too low molecular weight; NR: too high molecular weight",
 
-    {
-        question:
-            "A polymerization follows the rate relation Rp ∝ [M][I]^(1/2). If the monomer concentration is doubled while the initiator concentration is reduced to one-fourth of its original value, the polymerization rate becomes ________ times the original rate.\n\n" +
-            "Enter the answer correct to TWO decimal places.",
+        "PET: absence of polar groups; NR: presence of polar groups",
 
-        type: "NAT",
+        "PET: flexible backbone; NR: rigid backbone"
+    ],
 
-        answer: 1.00,
+    answer: 0,
 
-        marks: 2
-    },
+    type: "MCQ",
 
+    marks: 1
+},
 
-    {
-        question:
-            "A polymer has Mn = 25,000 g/mol and Mw = 75,000 g/mol. If the number-average molecular weight is increased to 50,000 g/mol while Mw remains unchanged, calculate the new polydispersity index.\n\n" +
-            "Enter the answer correct to TWO decimal places.",
 
-        type: "NAT",
+/* =====================================================
+   Q16 — NAT — 1 MARK
+   ===================================================== */
 
-        answer: 1.50,
+{
+    question:
+        "A polypropylene sample has specific volume 1.10 cm³/g. Given specific volumes: amorphous = 1.18 cm³/g and crystalline = 1.06 cm³/g, the mass-fraction crystallinity in %, is ________ (round to nearest integer).",
 
-        marks: 2
-    },
+    type: "NAT",
 
+    answer: 67,
 
-    {
-        question:
-            "Which combination correctly describes the morphology of a semicrystalline polymer?",
+    marks: 1
+},
 
-        options: [
-            "Only completely ordered crystalline regions",
-            "Only completely disordered amorphous regions",
-            "Crystalline regions dispersed within an amorphous matrix",
-            "A continuous metallic phase dispersed in a polymer phase"
-        ],
 
-        answer: 2,
+/* =====================================================
+   Q17 — MSQ — 2 MARKS
+   ===================================================== */
 
-        type: "MCQ",
+{
+    question:
+        "Which one of the following statements is CORRECT?",
 
-        marks: 2
-    },
+    options: [
+        "Atactic polypropylene is a hard, highly crystalline plastic",
 
+        "Isotactic polypropylene crystallizes because its regular stereochemistry allows helical chain packing",
 
-    {
-        question:
-            "A polymer has a glass-transition temperature of 80°C. A plasticizer lowers Tg by 25°C. What is the new Tg in °C?\n\n" +
-            "Enter the answer correct to TWO decimal places.",
+        "Syndiotactic polystyrene cannot crystallize",
 
-        type: "NAT",
+        "Tacticity has no influence on Tm"
+    ],
 
-        answer: 55.00,
+    correctAnswers: [1],
 
-        marks: 2
-    },
+    type: "MSQ",
 
+    marks: 2
+},
 
-    {
-        question:
-            "Which of the following factors generally promotes crystallinity in polymers?",
 
-        options: [
-            "Highly irregular chain structure",
-            "Extensive branching",
-            "Regular and symmetrical chain structure",
-            "Very rapid quenching from the melt"
-        ],
+/* =====================================================
+   Q18 — MSQ — 2 MARKS
+   ===================================================== */
 
-        answer: 2,
+{
+    question:
+        "Nylon 6,6 is made from hexamethylene diamine and adipic acid. For a sample with number-average molecular weight M̄n = 22,600 g/mol (repeat unit mass = 226 g/mol), which statements are CORRECT?",
 
-        type: "MCQ",
+    options: [
+        "The degree of polymerization based on the repeat unit is 100",
 
-        marks: 2
-    },
+        "The number of monomer molecules incorporated per chain is approximately 200",
 
+        "X̄n from Carothers' equation would count 200 structural units, requiring p ≈ 0.995",
 
-    {
-        question:
-            "A polymer composite contains 30% fiber by volume. The fiber modulus is 70 GPa and the matrix modulus is 3 GPa. Using the simple rule of mixtures for longitudinal loading, calculate the composite modulus in GPa.\n\n" +
-            "Enter the answer correct to TWO decimal places.",
+        "The repeat unit contains one amide linkage"
+    ],
 
-        type: "NAT",
+    correctAnswers: [0, 1, 2],
 
-        answer: 23.10,
+    type: "MSQ",
 
-        marks: 2
-    },
+    marks: 2
+},
 
 
-    {
-        question:
-            "Which statement best distinguishes addition polymerization from condensation polymerization?",
+/* =====================================================
+   Q19 — MSQ — 2 MARKS
+   ===================================================== */
 
-        options: [
-            "Addition polymerization always requires two different monomers",
-            "Condensation polymerization may proceed with elimination of small molecules such as water or HCl",
-            "Addition polymerization always produces water",
-            "Condensation polymerization cannot produce high molecular weight polymers"
-        ],
+{
+    question:
+        "Among the options given, identify the correct pair(s) of catalyst and co-catalyst that form a Ziegler-Natta catalyst. (G-23)",
 
-        answer: 1,
+    options: [
+        "TiCl3 and Al(CH3CH2)2Cl",
 
-        type: "MCQ",
+        "ZnCl2 and Al(CH3)3",
 
-        marks: 2
-    }
+        "TiO2 and Al(CH3)3",
+
+        "VCl4 and Al(CH3CH2)2C"
+    ],
+
+    correctAnswers: [0, 3],
+
+    type: "MSQ",
+
+    marks: 2
+},
+
+
+/* =====================================================
+   Q20 — MCQ — 2 MARKS
+   ===================================================== */
+
+{
+    question:
+        "Phenol-formaldehyde resin is prepared by:",
+
+    options: [
+        "Condensation polymerization",
+
+        "Cationic polymerization",
+
+        "Anionic polymerization",
+
+        "Ring-opening polymerization"
+    ],
+
+    answer: 0,
+
+    type: "MCQ",
+
+    marks: 2
+},
+
+
+/* =====================================================
+   Q21 — MSQ — 2 MARKS
+   ===================================================== */
+
+{
+    question:
+        "Consider an ideal step-growth polymerization involving multifunctional monomers. Which changes would favor formation of a crosslinked/gelled structure rather than a purely linear polymer?",
+
+    options: [
+        "Increasing the fraction of monomers having functionality greater than 2",
+
+        "Increasing conversion",
+
+        "Introducing only strictly bifunctional monomers",
+
+        "Increasing the number of possible inter-chain connections"
+    ],
+
+    correctAnswers: [0, 1, 3],
+
+    type: "MSQ",
+
+    marks: 2
+},
+
+
+/* =====================================================
+   Q22 — NAT — 2 MARKS
+   ===================================================== */
+
+{
+    question:
+        "A polymerization mixture contains 60 mol% bifunctional molecules and 40 mol% trifunctional molecules. Assuming the percentages are mole fractions of molecules, determine the theoretical gel-point conversion to two decimal places.",
+
+    type: "NAT",
+
+    answer: 0.83,
+
+    marks: 2
+},
+
+
+/* =====================================================
+   Q23 — NAT — 2 MARKS
+   ===================================================== */
+
+{
+    question:
+        "A linear step-growth polymerization has a stoichiometric ratio r = 0.90 and reaches an extent of reaction p = 0.98. Determine the number-average degree of polymerization, X̄n, to two decimal places.",
+
+    type: "NAT",
+
+    answer: 13.97,
+
+    marks: 2
+},
+
+
+/* =====================================================
+   Q24 — NAT — 2 MARKS
+   ===================================================== */
+
+{
+    question:
+        "Poly(hexamethylene adipamide) (Nylon-6,6) was synthesized by condensation polymerization of hexamethylenediamine and adipic acid in 1:1 mole ratio. Calculate the acid equivalent of the polymer whose average DP is 520.",
+
+    type: "NAT",
+
+    answer: 117538,
+
+    marks: 2
+},
+
+
+/* =====================================================
+   Q25 — NAT — 2 MARKS
+   ===================================================== */
+
+{
+    question:
+        "A Nylon-6,6 polymer has an acid equivalent of 90418 g/acid equivalent. The molecular mass of the repeating unit is 226 g/mol. Determine the average degree of polymerization.",
+
+    type: "NAT",
+
+    answer: 400,
+
+    marks: 2
+}
 
 ];
