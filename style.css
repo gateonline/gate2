@@ -971,3 +971,11 @@ body {
     color: #1e3a8a;
 
 }
+
+.question-image {
+    display: block;
+    max-width: 650px;
+    width: 100%;
+    height: auto;
+    margin: 20px auto;
+}
