@@ -8,6 +8,8 @@ const questions = [
     question:
         "Glyptal, an alkyd resin, is synthesized by reacting phthalic anhydride with glycerol. What are the respective functionalities of phthalic anhydride and glycerol?",
 
+    image: "images/glyptal.jpg",
+
     options: [
         "1, 3",
         "2, 3",
