@@ -80,17 +80,25 @@ function loadQuestion() {
         (q.marks > 1 ? "s" : "");
 
 
-    document.getElementById(
-        "question"
-    ).innerText =
-        "Q" +
-        (current + 1) +
-        ". [" +
-        q.marks +
-        (q.marks === 1 ? " Mark" : " Marks") +
-        "] " +
-        q.question;
+    let questionHTML =
+    "Q" +
+    (current + 1) +
+    ". [" +
+    q.marks +
+    (q.marks === 1 ? " Mark" : " Marks") +
+    "] " +
+    q.question.replace(/\n/g, "<br>");
 
+if (q.image) {
+    questionHTML +=
+        '<br><img src="' +
+        q.image +
+        '" class="question-image" alt="Question illustration">';
+}
+
+document.getElementById(
+    "question"
+).innerHTML = questionHTML;
 
     let html = "";
 
