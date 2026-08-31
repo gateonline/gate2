@@ -375,19 +375,9 @@ function saveCurrentAnswer() {
 
 function saveNext() {
 
-    let answered =
-        saveCurrentAnswer();
-
-
-    if (answered) {
-
-        review[current] = false;
-
-    }
-
+    saveCurrentAnswer();
 
     updatePalette();
-
 
     if (
         current <
@@ -409,19 +399,9 @@ function saveNext() {
 
 function prevQuestion() {
 
-    let answered =
-        saveCurrentAnswer();
-
-
-    if (answered) {
-
-        review[current] = false;
-
-    }
-
+    saveCurrentAnswer();
 
     updatePalette();
-
 
     if (current > 0) {
 
@@ -432,7 +412,6 @@ function prevQuestion() {
     }
 
 }
-
 
 /* =====================================================
    CLEAR
@@ -531,23 +510,13 @@ function updatePalette() {
 
 function jump(i) {
 
-    let answered =
-        saveCurrentAnswer();
-
-
-    if (answered) {
-
-        review[current] = false;
-
-    }
-
+    saveCurrentAnswer();
 
     current = i;
 
     loadQuestion();
 
 }
-
 
 /* =====================================================
    TIMER
