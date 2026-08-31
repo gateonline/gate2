@@ -968,17 +968,27 @@ function finalSubmit() {
                     answers[i]
                 )
             ) {
-
+            
                 answer =
-                    answers[i].join(",");
-
+                    answers[i]
+                        .map(
+                            function(index) {
+                                return String.fromCharCode(
+                                    65 + index
+                                );
+                            }
+                        )
+                        .join(",");
+            
             }
-
+            
             else {
-
+            
                 answer =
-                    answers[i];
-
+                    String.fromCharCode(
+                        65 + answers[i]
+                    );
+            
             }
 
         }
