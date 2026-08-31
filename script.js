@@ -80,25 +80,41 @@ function loadQuestion() {
         (q.marks > 1 ? "s" : "");
 
 
+    /*
+     * Display question number,
+     * marks and question text.
+     */
+
     let questionHTML =
-    "Q" +
-    (current + 1) +
-    ". [" +
-    q.marks +
-    (q.marks === 1 ? " Mark" : " Marks") +
-    "] " +
-    q.question.replace(/\n/g, "<br>");
+        "Q" +
+        (current + 1) +
+        ". [" +
+        q.marks +
+        (q.marks === 1 ? " Mark" : " Marks") +
+        "] " +
+        q.question.replace(/\n/g, "<br>");
 
-if (q.image) {
-    questionHTML +=
-        '<br><img src="' +
-        q.image +
-        '" class="question-image" alt="Question illustration">';
-}
 
-document.getElementById(
-    "question"
-).innerHTML = questionHTML;
+    /*
+     * Display image if the question
+     * contains an image property.
+     */
+
+    if (q.image) {
+
+        questionHTML +=
+            '<br><img src="' +
+            q.image +
+            '" class="question-image" alt="Question illustration">';
+
+    }
+
+
+    document.getElementById(
+        "question"
+    ).innerHTML =
+        questionHTML;
+
 
     let html = "";
 
@@ -165,15 +181,10 @@ document.getElementById(
                     <label>
 
                         <input
-
                             type="checkbox"
-
                             name="option"
-
                             value="${i}"
-
                             ${checked ? "checked" : ""}
-
                         >
 
                         ${opt}
@@ -206,15 +217,10 @@ document.getElementById(
                     <label>
 
                         <input
-
                             type="radio"
-
                             name="option"
-
                             value="${i}"
-
                             ${checked ? "checked" : ""}
-
                         >
 
                         ${opt}
@@ -231,15 +237,17 @@ document.getElementById(
 
     document.getElementById(
         "options"
-    ).innerHTML = html;
+    ).innerHTML =
+        html;
 
 
     updatePalette();
+
 }
 
 
 /* =====================================================
-   SAVE ANSWER
+   SAVE CURRENT ANSWER
    ===================================================== */
 
 function saveCurrentAnswer() {
@@ -366,6 +374,7 @@ function saveCurrentAnswer() {
 
 
     return false;
+
 }
 
 
@@ -375,17 +384,30 @@ function saveCurrentAnswer() {
 
 function saveNext() {
 
-    let answered = saveCurrentAnswer();
+    let answered =
+        saveCurrentAnswer();
 
-    // Save & Next explicitly clears review status
-    // only when the question has an answer.
+
+    /*
+     * Save & Next explicitly removes
+     * the review status if the question
+     * has an answer.
+     */
+
     if (answered) {
+
         review[current] = false;
+
     }
+
 
     updatePalette();
 
-    if (current < questions.length - 1) {
+
+    if (
+        current <
+        questions.length - 1
+    ) {
 
         current++;
 
@@ -404,10 +426,17 @@ function prevQuestion() {
 
     saveCurrentAnswer();
 
-    // Do NOT change review[current].
-    // A reviewed question stays violet.
+
+    /*
+     * Do NOT remove review status.
+     *
+     * A question marked for review
+     * must remain violet when using
+     * Previous.
+     */
 
     updatePalette();
+
 
     if (current > 0) {
 
@@ -418,8 +447,10 @@ function prevQuestion() {
     }
 
 }
+
+
 /* =====================================================
-   CLEAR
+   CLEAR RESPONSE
    ===================================================== */
 
 function clearResponse() {
@@ -473,6 +504,12 @@ function updatePalette() {
             "not-answered";
 
 
+        /*
+         * Review has priority.
+         * Therefore violet stays violet
+         * until Save & Next clears it.
+         */
+
         if (review[i]) {
 
             colorClass =
@@ -493,9 +530,7 @@ function updatePalette() {
         palette.innerHTML += `
 
             <button
-
                 class="${colorClass}"
-
                 onclick="jump(${i})">
 
                 ${i + 1}
@@ -510,21 +545,30 @@ function updatePalette() {
 
 
 /* =====================================================
-   JUMP
+   JUMP TO QUESTION
    ===================================================== */
 
 function jump(i) {
 
     saveCurrentAnswer();
 
-    // Do NOT clear review status.
-    // Clicking a question number must preserve violet status.
+
+    /*
+     * IMPORTANT:
+     *
+     * Do NOT clear review[i].
+     *
+     * Clicking a question number must
+     * preserve the violet review status.
+     */
 
     current = i;
 
     loadQuestion();
 
 }
+
+
 /* =====================================================
    TIMER
    ===================================================== */
@@ -567,6 +611,10 @@ function updateTimer() {
         elapsed;
 
 
+    /*
+     * TIME OVER
+     */
+
     if (remaining <= 0) {
 
         document.getElementById(
@@ -582,6 +630,11 @@ function updateTimer() {
 
         examEnded = true;
 
+
+        /*
+         * Automatically open
+         * name/mobile submission.
+         */
 
         openNameModal(true);
 
@@ -609,6 +662,10 @@ function updateTimer() {
         String(seconds).padStart(2, "0");
 
 
+    /*
+     * Last 5 minutes warning.
+     */
+
     if (remaining <= 300) {
 
         document.querySelector(
@@ -623,7 +680,7 @@ function updateTimer() {
 
 
 /* =====================================================
-   SUBMIT
+   SUBMIT EXAM
    ===================================================== */
 
 function submitExam() {
@@ -632,6 +689,7 @@ function submitExam() {
 
     updatePalette();
 
+
     document.getElementById(
         "submitModal"
     ).style.display =
@@ -639,6 +697,10 @@ function submitExam() {
 
 }
 
+
+/* =====================================================
+   CLOSE SUBMIT CONFIRMATION
+   ===================================================== */
 
 function closeSubmitModal() {
 
@@ -650,13 +712,23 @@ function closeSubmitModal() {
 }
 
 
+/* =====================================================
+   CONFIRM SUBMIT
+   ===================================================== */
+
 function confirmSubmit() {
 
     closeSubmitModal();
 
-    examEnded = true;
 
-    clearInterval(timerInterval);
+    /*
+     * IMPORTANT:
+     *
+     * Do NOT set examEnded = true here.
+     *
+     * The student must be able to press
+     * Cancel in the name/mobile window.
+     */
 
     openNameModal(false);
 
@@ -664,7 +736,7 @@ function confirmSubmit() {
 
 
 /* =====================================================
-   NAME
+   NAME + MOBILE MODAL
    ===================================================== */
 
 function openNameModal(autoSubmit) {
@@ -673,9 +745,16 @@ function openNameModal(autoSubmit) {
 
     updatePalette();
 
+
     document.getElementById(
         "candidateName"
     ).value = "";
+
+
+    document.getElementById(
+        "candidateMobile"
+    ).value = "";
+
 
     document.getElementById(
         "nameModal"
@@ -697,7 +776,16 @@ function openNameModal(autoSubmit) {
 }
 
 
+/* =====================================================
+   CLOSE NAME MODAL
+   ===================================================== */
+
 function closeNameModal() {
+
+    /*
+     * If timer has expired, the exam
+     * cannot be resumed.
+     */
 
     if (examEnded) {
 
@@ -715,7 +803,7 @@ function closeNameModal() {
 
 
 /* =====================================================
-   SCORE
+   SCORE CALCULATION
    ===================================================== */
 
 function calculateScore() {
@@ -749,9 +837,9 @@ function calculateScore() {
 
 
             /*
-               Allow answer within
-               0.01 tolerance.
-            */
+             * NAT tolerance:
+             * ±0.01
+             */
 
             if (
                 Math.abs(
@@ -763,6 +851,7 @@ function calculateScore() {
                 score += q.marks;
 
             }
+
 
             continue;
 
@@ -790,7 +879,7 @@ function calculateScore() {
                 answers[i]
                     .slice()
                     .sort(
-                        (a,b) => a-b
+                        (a, b) => a - b
                     );
 
 
@@ -798,7 +887,7 @@ function calculateScore() {
                 q.correctAnswers
                     .slice()
                     .sort(
-                        (a,b) => a-b
+                        (a, b) => a - b
                     );
 
 
@@ -832,16 +921,18 @@ function calculateScore() {
 
 
             /*
-               MSQ:
-               Correct = +marks
-               Wrong = 0
-            */
+             * MSQ:
+             *
+             * Correct = full marks
+             * Wrong = 0
+             */
 
             if (isCorrect) {
 
                 score += q.marks;
 
             }
+
 
             continue;
 
@@ -875,12 +966,14 @@ function calculateScore() {
             else {
 
                 /*
-                   Wrong MCQ:
-                   1-mark MCQ = -1/3
-                   2-mark MCQ = -2/3
-                */
+                 * Negative marking:
+                 *
+                 * 1-mark MCQ = -1/3
+                 * 2-mark MCQ = -2/3
+                 */
 
-                score -= q.marks / 3;
+                score -=
+                    q.marks / 3;
 
             }
 
@@ -889,11 +982,22 @@ function calculateScore() {
     }
 
 
+    /*
+     * Do not allow negative
+     * final score.
+     */
+
     if (score < 0) {
+
         score = 0;
+
     }
 
-    return Number(score.toFixed(2));
+
+    return Number(
+        score.toFixed(2)
+    );
+
 }
 
 
@@ -914,28 +1018,66 @@ function finalSubmit() {
             "candidateMobile"
         ).value.trim();
 
+
+    /*
+     * Validate name.
+     */
+
     if (!name) {
 
-        alert("Please enter your name.");
+        alert(
+            "Please enter your name."
+        );
+
         return;
 
     }
 
-    if (!/^[0-9]{10}$/.test(mobile)) {
 
-        alert("Please enter a valid 10-digit mobile number.");
+    /*
+     * Validate 10-digit mobile number.
+     */
+
+    if (
+        !/^[0-9]{10}$/.test(
+            mobile
+        )
+    ) {
+
+        alert(
+            "Please enter a valid 10-digit mobile number."
+        );
+
         return;
 
     }
+
+
+    /*
+     * Save current answer before
+     * calculating final score.
+     */
+
+    saveCurrentAnswer();
 
 
     let score =
         calculateScore();
 
 
+    /*
+     * Google Apps Script Web App URL.
+     *
+     * This sends the response to Sheet2.
+     */
+
     let url =
         "https://script.google.com/macros/s/AKfycbw_AyF_eyKtsgT-ufYemQjAa6QxhOzzySsmJCY45fxeBZtT2xc0O-ARRlpdv2PQVX7Piw/exec";
 
+
+    /*
+     * Candidate name.
+     */
 
     url +=
         "?name=" +
@@ -943,12 +1085,21 @@ function finalSubmit() {
             name
         );
 
+
+    /*
+     * Mobile number.
+     */
+
     url +=
         "&mobile=" +
         encodeURIComponent(
             mobile
         );
 
+
+    /*
+     * Send Q1-Q25.
+     */
 
     for (
         let i = 0;
@@ -959,47 +1110,111 @@ function finalSubmit() {
         let answer = "";
 
 
+        /*
+         * IMPORTANT:
+         * Define q for the current question.
+         */
+
+        let q =
+            questions[i];
+
+
         if (
             answers[i] !== null
         ) {
 
-            if (q.type === "NAT") {
-            
-                // NAT answers must remain numerical
-                answer = answers[i];
-            
+
+            /* ============================
+               NAT
+               ============================ */
+
+            if (
+                q.type === "NAT"
+            ) {
+
+                /*
+                 * NAT answers remain
+                 * numerical.
+                 */
+
+                answer =
+                    answers[i];
+
             }
-            
-            else if (q.type === "MSQ") {
-            
-                // Convert MSQ option indexes to A, B, C, D
-                if (Array.isArray(answers[i])) {
-            
+
+
+            /* ============================
+               MSQ
+               ============================ */
+
+            else if (
+                q.type === "MSQ"
+            ) {
+
+                /*
+                 * Convert:
+                 *
+                 * 0 -> A
+                 * 1 -> B
+                 * 2 -> C
+                 * 3 -> D
+                 */
+
+                if (
+                    Array.isArray(
+                        answers[i]
+                    )
+                ) {
+
                     answer =
                         answers[i]
-                            .map(function(index) {
-                                return String.fromCharCode(
-                                    65 + index
-                                );
-                            })
+                            .map(
+                                function(index) {
+
+                                    return String.fromCharCode(
+                                        65 + index
+                                    );
+
+                                }
+                            )
                             .join(",");
-            
+
                 }
-            
+
             }
-            
-            else if (q.type === "MCQ") {
-            
-                // Convert MCQ option index to A, B, C, D
+
+
+            /* ============================
+               MCQ
+               ============================ */
+
+            else if (
+                q.type === "MCQ"
+            ) {
+
+                /*
+                 * Convert:
+                 *
+                 * 0 -> A
+                 * 1 -> B
+                 * 2 -> C
+                 * 3 -> D
+                 */
+
                 answer =
                     String.fromCharCode(
                         65 + answers[i]
                     );
-            
+
             }
 
         }
 
+
+        /*
+         * Add question response
+         * to Google Apps Script URL.
+         */
 
         url +=
             "&q" +
@@ -1012,6 +1227,10 @@ function finalSubmit() {
     }
 
 
+    /*
+     * Add final score.
+     */
+
     url +=
         "&score=" +
         encodeURIComponent(
@@ -1020,9 +1239,9 @@ function finalSubmit() {
 
 
     /*
-       Send to Google Sheets
-       without opening another page.
-    */
+     * Send to Google Sheets
+     * without leaving the exam page.
+     */
 
     let iframe =
         document.createElement(
@@ -1043,30 +1262,66 @@ function finalSubmit() {
     );
 
 
+    /*
+     * NOW the exam is officially finished.
+     */
+
+    examEnded = true;
+
+
+    clearInterval(
+        timerInterval
+    );
+
+
+    /*
+     * Close name/mobile modal.
+     */
+
     document.getElementById(
         "nameModal"
     ).style.display =
         "none";
 
 
+    /*
+     * Display candidate name
+     * and mobile number.
+     */
+
     document.getElementById(
         "resultName"
     ).innerText =
-        "Candidate: " + name +
-        " | Mobile: " + mobile;
+        "Candidate: " +
+        name +
+        " | Mobile: " +
+        mobile;
 
+
+    /*
+     * Display score.
+     */
 
     document.getElementById(
         "resultScore"
     ).innerText =
-        score + " / 35";
+        score +
+        " / 35";
 
+
+    /*
+     * Show result modal.
+     */
 
     document.getElementById(
         "resultModal"
     ).style.display =
         "flex";
 
+
+    /*
+     * Remove timer information.
+     */
 
     sessionStorage.removeItem(
         "gateExamStartTime"
@@ -1159,6 +1414,10 @@ function calculateResult() {
 
     try {
 
+        /*
+         * Convert ^ to **
+         */
+
         expression =
             expression.replace(
                 /\^/g,
@@ -1166,12 +1425,20 @@ function calculateResult() {
             );
 
 
+        /*
+         * Convert sqrt( to Math.sqrt(
+         */
+
         expression =
             expression.replace(
                 /sqrt\(/g,
                 "Math.sqrt("
             );
 
+
+        /*
+         * Evaluate calculator expression.
+         */
 
         let result =
             Function(
