@@ -377,11 +377,8 @@ function saveNext() {
 
     let answered = saveCurrentAnswer();
 
-    /*
-       If the question has been answered,
-       remove the "Mark for Review" status.
-    */
-
+    // Save & Next explicitly clears review status
+    // only when the question has an answer.
     if (answered) {
         review[current] = false;
     }
@@ -405,16 +402,10 @@ function saveNext() {
 
 function prevQuestion() {
 
-    let answered = saveCurrentAnswer();
+    saveCurrentAnswer();
 
-    /*
-       Once answered, remove review status.
-       The answer will still be evaluated normally.
-    */
-
-    if (answered) {
-        review[current] = false;
-    }
+    // Do NOT change review[current].
+    // A reviewed question stays violet.
 
     updatePalette();
 
@@ -427,7 +418,6 @@ function prevQuestion() {
     }
 
 }
-
 /* =====================================================
    CLEAR
    ===================================================== */
@@ -525,24 +515,16 @@ function updatePalette() {
 
 function jump(i) {
 
-    let answered = saveCurrentAnswer();
+    saveCurrentAnswer();
 
-    /*
-       If an answer has been entered,
-       the question is no longer considered
-       "unanswered and marked for review".
-    */
-
-    if (answered) {
-        review[current] = false;
-    }
+    // Do NOT clear review status.
+    // Clicking a question number must preserve violet status.
 
     current = i;
 
     loadQuestion();
 
 }
-
 /* =====================================================
    TIMER
    ===================================================== */
