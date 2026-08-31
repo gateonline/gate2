@@ -375,14 +375,20 @@ function saveCurrentAnswer() {
 
 function saveNext() {
 
-    saveCurrentAnswer();
+    let answered = saveCurrentAnswer();
+
+    /*
+       If the question has been answered,
+       remove the "Mark for Review" status.
+    */
+
+    if (answered) {
+        review[current] = false;
+    }
 
     updatePalette();
 
-    if (
-        current <
-        questions.length - 1
-    ) {
+    if (current < questions.length - 1) {
 
         current++;
 
@@ -399,7 +405,16 @@ function saveNext() {
 
 function prevQuestion() {
 
-    saveCurrentAnswer();
+    let answered = saveCurrentAnswer();
+
+    /*
+       Once answered, remove review status.
+       The answer will still be evaluated normally.
+    */
+
+    if (answered) {
+        review[current] = false;
+    }
 
     updatePalette();
 
@@ -510,7 +525,17 @@ function updatePalette() {
 
 function jump(i) {
 
-    saveCurrentAnswer();
+    let answered = saveCurrentAnswer();
+
+    /*
+       If an answer has been entered,
+       the question is no longer considered
+       "unanswered and marked for review".
+    */
+
+    if (answered) {
+        review[current] = false;
+    }
 
     current = i;
 
