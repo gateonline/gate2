@@ -963,27 +963,34 @@ function finalSubmit() {
             answers[i] !== null
         ) {
 
-            if (
-                Array.isArray(
-                    answers[i]
-                )
-            ) {
+            if (q.type === "NAT") {
             
-                answer =
-                    answers[i]
-                        .map(
-                            function(index) {
-                                return String.fromCharCode(
-                                    65 + index
-                                );
-                            }
-                        )
-                        .join(",");
+                // NAT answers must remain numerical
+                answer = answers[i];
             
             }
             
-            else {
+            else if (q.type === "MSQ") {
             
+                // Convert MSQ option indexes to A, B, C, D
+                if (Array.isArray(answers[i])) {
+            
+                    answer =
+                        answers[i]
+                            .map(function(index) {
+                                return String.fromCharCode(
+                                    65 + index
+                                );
+                            })
+                            .join(",");
+            
+                }
+            
+            }
+            
+            else if (q.type === "MCQ") {
+            
+                // Convert MCQ option index to A, B, C, D
                 answer =
                     String.fromCharCode(
                         65 + answers[i]
